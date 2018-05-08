@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+">
+
+    <!--SpringMvc比Spring先扫描-->
+    <!-- 扫描添加了controller注解的包 -->
+    <context:component-scan base-package="com.ss.controller"/>
+    <context:component-scan base-package="com.ss.aspect"/>
+    <!--使用注解开发，不用配置controller了
+    <bean name="/hello.action" class="com.ss.demo.demoDay1.HelloAction" />
+    -->
+
+    <!--这样会注册RequestMappingHandlerAdapter这个bean，
+    它能处理@RequestMapping注解 -->
+    <mvc:annotation-driven/>
+    <!--使用默认的Servlet来响应静态文件-->
+    <mvc:default-servlet-handler/>
+
+
+
+    <!-- 视图解析器 -->
+    <bean  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- view是用什么显示，这里是jsp，还可以用velocity之类的 -->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+        <property name="prefix" value="/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <!-- 文件上传使用 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20971500"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="resolveLazily" value="true"/>
+    </bean>
+
+
+    <!-- 启动对@AspectJ注解的支持，如果没用注解，可以用后面那种方式 -->
+    <!-- proxy-target-class等于true是强制使用cglib代理，proxy-target-class默认是false，如果你的类实现了接口 就走JDK代理，如果没有，走cglib代理  -->
+    <!-- 注：对于单利模式建议使用cglib代理，虽然JDK动态代理比cglib代理速度快，但性能不如cglib -->
+  <!--  <aop:aspectj-autoproxy proxy-target-class="true"/>-->
+
+    <!-- 使用xml配置aop -->
+    <!-- 强制使用cglib代理，如果不设置，将默认使用jdk的代理，但是jdk的代理是基于接口的 -->
+    <aop:config proxy-target-class="true" />
+    <aop:config>
+        <!--定义切面-->
+        <aop:pointcut expression="execution(* com.ss.controller.*Controller.*(..))" id="logPointCut"/>
+        <aop:aspect id="logAspect" ref="logInterceptor">
+            <!-- 定义切入点 (配置在com.ss.controller下所有的类在调用之前都会被拦截)-->
+            <!--方法执行之前被调用执行的-->
+          <!--  <aop:before method="beforeMethod" pointcut-ref="logPointCut"/>&lt;!&ndash;一个切入点的引用&ndash;&gt;
+            <aop:after method="afterMethod" pointcut-ref="logPointCut"/>一个切入点的引用-->
+            <aop:around method="Around" pointcut-ref="logPointCut"/>
+        </aop:aspect>
+    </aop:config>
+
+
+</beans>
+
+

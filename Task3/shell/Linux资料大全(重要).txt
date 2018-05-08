@@ -1,0 +1,3815 @@
+今天完成的事情：
+
+linux
+logout/exit 退出/注销
+
+shutdown 关机
+shutdown -h 带时间条件的关机 (服务器关机是非常危险的行为，谨慎操作)
+shutdown -h now  立刻关机  需要授权或root帐号操作
+shutdown -h 12.30 指定具体时间关机
+shutdown -h 3   3分钟后关机
+
+sudo : superuser do  : 超级用户来执行该命令
+由超级用户配置谁可以执行sudo,不然岂不是任何账户都可以用sudo来执行一些高危操作
+配置到 /etc/sudoers ,该文件有所有用户的权限设置
+cat /etc/sudoers 查看权限内容 cat : 查看
+
+shutdown -r 时间  ： 指定时间后重启
+    -r :  restart
+
+linux基本命令：文件操作命令
+1.
+ls ：查看目录内容
+  -l:查看详细信息
+  -a:查看所有文件(包括隐藏文件)
+    演示：
+	如下图，在根目录输入ls，只是简单的显示所有文件
+	@1
+	输入ls -l，则以详细列表的形式展现
+	@2
+	ls -a，显示的结果比单纯的ls多了两个隐藏文件，如红框中所示
+	@3
+	也可以组合使用，ls -al(或 -la)，会将所有文件(包括隐藏)以列表形式展出
+	@4
+man : manual 手册、指南的意思，帮助命令，好比windows的help
+如 man ls 显示ls下的所有分支命令
+@5
+2.
+mkdir : 创建目录
+  mkdir opt 创建opt文件夹
+  cd opt 进入了该文件夹
+  cd .. 返回了上一级目录(我的是root)
+  mkdir ./opt/java 在当前目录下的opt里创建java文件夹
+  然后进去一看果然创建了java文件夹，如下
+  @6
+3.
+cd 进入目录
+  -cd .. 返回上一目录
+  -cd ./子目录/子目录  直接进到孙目录，再往后加可以进到曾孙目录
+  @7
+  -cd ../../  进入爷爷目录
+  -cd ../../../home, 进入曾祖父目录下的home目录，前提是该目录下有home目录
+  @8
+  -cd ../../../home/avi/jpn, 进入曾祖父的儿子home的儿子avi的儿子jpn目录里，就是进入曾祖父的曾孙jpn里，如果有这个曾孙的话。(顺便还把中国的族谱关系理了一下)
+4.
+touch : 创建一个空白的普通文件
+比如touch aa.txt, 就是创建了一个aa.txt,里面什么内容都没有。
+5.
+echo : 
+比如输入 echo "操你妈">bb.txt ,就会把"操你妈"放到bb.txt里，没有该txt就创建一个。
+代码演示如下
+@9
+6.
+cat : 查看文件内容
+more : 分页查看文件内容
+	这个分页的意思就是说，比如你 more bb.txt,假设里面有一千句"操你妈",显然你用cat一页是显示不全的
+	用more可以分页显示，然后按空格换页。
+7.
+cp : 复制
+比如在root目录下，执行 cp bb.txt ./opt/java，就是把root下的bb.txt复制到了java下。
+你也可以在root下，直接执行 ls ./opt/java，这样可以直接查看到它孙子java下的目录内容，比如我们刚刚
+复制过去的bb.txt.
+
+mv :
+1.剪切
+2.重命名
+-比如在root目录下，执行 mv bb.txt ../home，就是把root下的bb.txt剪切到了爸爸的另一个儿子home下。
+ 然后在执行 ls ../home, 就可以查看有没有剪切成功
+-如果剪切的文件存放在同一目录中，则是重命名。
+ 比如 mv bb.txt cc.txt ,就是将bb重命名为cc
+
+rm
+	-删除文件
+rm -f 
+     -强制删除，没有提示，也不管是否存在这个文件，就是删
+	 如 rm -f aa.txt 没存在也不要紧，就是删，没有任何提示
+rm -i
+	-删除前提示 ，默认不删除，要删除，输入y
+rm -d
+	-删除空白目录
+rm -r
+	-递归删除,删除一个文件夹里所有的子子孙孙。
+
+pwd 查看当前目录绝对路径
+   
+重定向
+    - > :覆盖模式
+	比如 echo "操你爸">bb.txt , 然后该文件原内容就被"操你爸"覆盖了。
+	- >>：追加模式
+	 就是没有覆盖，而是在原基础上加内容。 
+passwd   :设置密码  ，ubuntu默认 root账号是没有开启 ，只要设置root密码即可开启
+         执行 sudo passwd root, 是为root账户设置密码
+su  切换用户
+
+——————————————————————————————————————————————————————————————————————————————————————————
+(重点)
+
+1.安装软件：
+正如windows的软件都是 *.exe ,ubuntu是对debian的升级版，所以软件是*.deb 格式
+离线安装
+  dpkg : debian package的意思
+  执行 sudo dpkg -i <文件名> ,即可安装已经下载好的文件。
+    -i : install
+  卸载
+  执行 sudo dpkg -r <包名>, 即可卸载, 比如sudo dpkg -r mysql
+     -r : remove
+在线安装
+	apt-get : advance package tools, 是对dpkg命令的升级，在线安装
+	执行：sudo apt-get -install <包名>,  安装
+	执行：sudo apt-get -remove <包名>,  卸载
+2.vim 软件:类似记事本，但比记事本强大
+ 首先输入vim回车，如果能进入就代表有预装vim，没有预装还要下载，我的是有预装的。
+ 
+ 使用vim 
+   执行 vim aa.txt ,就可以对该文件进行编辑了。  
+   操作模式：
+	 1. 一般模式 ，默认进入的一般模式，该模式不能编辑文档 ，只能查看
+		按 i（insert）  进入 插入模式 
+	 2. 编辑模式、插入模式 
+		 该模式可以编辑文档，按esc 退出插入模式，进入到一般模式 
+	 3. 命令模式 ：在 一般模式中按：进入命令模式
+		- q： 安全退出，当没有操作该文档，则直接按q退出vim 
+	- q! ：当修改了内容，但是不想保存，则q！强制退出
+	- wq ：保存退出
+	- set number 显示行号
+	- set nonumber 取消行号显示	
+	
+
+
+
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+| 管道命令
+前面命令的结果作为后面命令的输入，因为默认它是输入到屏幕的。
+
+
+ps  Process Status
+
+用ps命令参数 进程查看命令
+需掌握一些最常用的命令参数就可以了。
+最常用的三个参数是u、a、x。
+a 显示终端上的所有进程，包括其他用户的进程。
+x 显示没有控制终端的进程
+u user 用户名
+
+-f 全部列出，通常和其他选项联用。如：ps -fa or ps -fx and so on.
+
+组合使用ps axuf
+
+
+ps aux 和ps -ef 比较
+两者的输出结果差别不大，但展示风格不同。aux是BSD风格，-ef是System V风格。这是次要的区别，一个影响使用的区别是aux会截断command列，而-ef不会。
+当结合grep时这种区别会影响到结果。 
+举例请参考：http://www.2cto.com/os/201303/197697.html 
+
+综上：以上三个命令推荐使用：ps –ef 
+
+
+-------------------------------------------------------------------------
+
+
+在linux中，&和&&,|和||介绍如下：
+
+&  表示任务在后台执行，如要在后台运行redis-server,则有  redis-server &
+
+&& &&前的命令执行成功了就继续执行后面的命令 ， 如 echo '1‘ && echo '2'    
+
+| 表示管道，上一条命令的输出，作为下一条命令参数，如 echo 'yes' | wc -l
+
+||  ||前的命令执行失败了就去执行后面的命令，如 cat nofile || echo "fail"
+
+
+-----------------------------------------------------------------------------
+
+` 的意思
+在字符1左边，在TAB键上面的那个键，引住的命令（command）执行结果能赋值给一个变量。
+例子：
+A=`ls -l`
+把ls -l的结果赋给A    ls -l 作为命令来执行
+
+
+$()与 ``
+
+在操作上，这两者都是达到相应的效果，但是建议使用$( )，理由如下：
+
+    ｀｀很容易与''搞混乱，尤其对初学者来说。
+    在多层次的复合替换中，｀｀必须要额外的跳脱处理（反斜线），而$( )比较直观。
+    最后，$( )的弊端是，并不是所有的类unix系统都支持这种方式，但反引号是肯定支持的
+	
+	
+ ${}变量替换
+
+一般情况下，$var与${var}是没有区别的，但是用${ }会比较精确的界定变量名称的范围
+
+--------------------------------------------------------------------------------
+1.grep 是查找含有指定文本行的意思，比如grep test 就是查找含有test的文本的行
+
+2.grep -v 是反向查找的意思，比如 grep -v grep 就是查找不含有 grep 字段的行
+
+---------------------------------------------------------------------------------
+
+2> 1> 0>
+
+  标准输入，标准输出，标准错误其实是三个完全不同的文件，虽然我们看起来标准输出和标准错误都输入到显示屏中显示，但是不能用输出重定向将错误重定向到其他文件
+  标准输入，标准输出，标准错误的文件描述符分别是0，1，2，这也是错误重定向2>的由来
+
+--------------------------------------------------------------------------------
+echo -n 和echo -e 参数意义
+
+echo -n 不换行输出
+
+$echo -n "123"
+$echo "456"
+
+最终输出 
+123456
+
+而不是
+123
+456
+
+
+echo -e 处理特殊字符
+
+若字符串中出现以下字符，则特别加以处理，而不会将它当成一般文字输出：
+\a 发出警告声；
+\b 删除前一个字符；
+\c 最后不加上换行符号；
+\f 换行但光标仍旧停留在原来的位置；
+\n 换行且光标移至行首；
+\r 光标移至行首，但不换行；
+\t 插入tab；
+\v 与\f相同；
+\ 插入\字符；
+\nnn 插入nnn（八进制）所代表的ASCII字符；
+
+$echo -e "a\bdddd"
+dddd
+
+
+$echo -e "a\adddd" //输出同时会发出报警声音
+adddd
+
+
+$echo -e "a\ndddd" //自动换行
+a
+dddd  
+
+----------------------------------------------------------------------------------
+if [ str1 = str2 ]　　　　　  当两个串有相同内容、长度时为真 
+if [ str1 != str2 ]　　　　　 当串str1和str2不等时为真 
+if [ -n str1 ]　　　　　　 当串的长度大于0时为真(串非空) 
+if [ -z str1 ]　　　　　　　 当串的长度为0时为真(空串) 
+if [ str1 ]　　　　　　　　 当串str1为非空时为真
+
+shell 中利用 -n 来判定字符串非空。
+
+-------------------------------------------------------------------
+
+kill和kill -9
+
+kill 会等待进程释放完资源在结束进程
+kill -9 是直接退出
+
+---------------------------------------------------
+ grep命令常见用法
+
+在文件中搜索一个单词，命令会返回一个包含“match_pattern”的文本行：
+
+grep match_pattern file_name
+grep "match_pattern" file_name
+
+在多个文件中查找：
+
+grep "match_pattern" file_1 file_2 file_3 ...
+
+输出除之外的所有行 -v 选项：
+
+grep -v "match_pattern" file_name
+
+标记匹配颜色 --color=auto 选项：
+
+grep "match_pattern" file_name --color=auto
+
+使用正则表达式 -E 选项：
+
+grep -E "[1-9]+"
+或
+egrep "[1-9]+"
+
+只输出文件中匹配到的部分 -o 选项：
+
+echo this is a test line. | grep -o -E "[a-z]+\."
+line.
+
+echo this is a test line. | egrep -o "[a-z]+\."
+line.
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+建立一个脚本
+
+　　Linux中有好多中不同的shell，但是通常我们使用bash (bourne again shell) 进行shell编程，因为bash是免费的并且很容易使用。所以在本文中笔者所提供的脚本都是使用bash（但是在大多数情况下，这些脚本同样可以在 bash的大姐，bourne shell中运行）。
+　　如同其他语言一样，通过我们使用任意一种文字编辑器，比如nedit、kedit、emacs、vi
+　　等来编写我们的shell程序。
+　　程序必须以下面的行开始（必须方在文件的第一行）：
+#!/bin/sh
+　　符号#!用来告诉系统它后面的参数是用来执行该文件的程序。在这个例子中我们使用/bin/sh来执行程序。
+　　当编辑好脚本时，如果要执行该脚本，还必须使其可执行。
+　　要使脚本可执行：
+chmod +x filename    +x是增加执行权限，+r是增加读的权限
+　　然后，您可以通过输入： ./filename 来执行您的脚本。
+注释
+　　在进行shell编程时，以#开头的句子表示注释，直到这一行的结束。我们真诚地建议您在程序中使用注释。如果您使用了注释，那么即使相当长的时间内没有使用该脚本，您也能在很短的时间内明白该脚本的作用及工作原理。
+变量
+　　在其他编程语言中您必须使用变量。在shell编程中，所有的变量都由字符串组成，并且您不需要对变量进行声明。要赋值给一个变量，您可以这样写：
+变量名=值
+　　取出变量值可以加一个美元符号（$）在变量前面：
+
+#!/bin/sh 
+#对变量赋值： 
+a="hello world"
+# 现在打印变量a的内容： 
+echo "A is:"
+echo $a
+
+　　在您的编辑器中输入以上内容，然后将其保存为一个文件first。之后执行chmod +x first
+　　使其可执行，最后输入./first执行该脚本。
+　　这个脚本将会输出：
+A is:
+hello world
+　　有时候变量名很容易与其他文字混淆，比如：
+num=2
+echo "this is the $numnd"
+　　这并不会打印出"this is the 2nd"，而仅仅打印"this is the "，因为shell会去搜索变量numnd的值，但是这个变量时没有值的。可以使用花括号来告诉shell我们要打印的是num变量：
+num=2
+echo "this is the ${num}nd"
+　　这将打印： this is the 2nd
+　　有许多变量是系统自动设定的，这将在后面使用这些变量时进行讨论。
+　　如果您需要处理数学表达式，那么您需要使用诸如expr等程序（见下面）。
+　　除了一般的仅在程序内有效的shell变量以外，还有环境变量。由export关键字处理过的变量叫做环境变量。我们不对环境变量进行讨论，因为通常情况下仅仅在登录脚本中使用环境变量。
+Shell命令和流程控制
+　　在shell脚本中可以使用三类命令：
+1)Unix 命令:
+　　虽然在shell脚本中可以使用任意的unix命令，但是还是由一些相对更常用的命令。这些命令通常是用来进行文件和文字操作的。
+常用命令语法及功能
+　　echo "some text": 将文字内容打印在屏幕上
+　　ls: 文件列表
+　　wc –l filewc -w filewc -c file: 计算文件行数计算文件中的单词数计算文件中的字符数
+　　cp sourcefile destfile: 文件拷贝
+　　mv oldname newname : 重命名文件或移动文件
+　　rm file: 删除文件
+　　grep 'pattern' file: 在文件内搜索字符串比如：grep 'searchstring' file.txt
+　　cut -b colnum file: 指定欲显示的文件内容范围，并将它们输出到标准输出设备比如：输出每行第5个到第9个字符cut -b5-9 file.txt千万不要和cat命令混淆，这是两个完全不同的命令
+　　cat file.txt: 输出文件内容到标准输出设备（屏幕）上
+　　file somefile: 得到文件类型
+　　read var: 提示用户输入，并将输入赋值给变量
+　　sort file.txt: 对file.txt文件中的行进行排序
+　　uniq: 删除文本文件中出现的行列比如： sort file.txt | uniq
+　　expr: 进行数学运算Example: add 2 and 3expr 2 "+" 3
+　　find: 搜索文件比如：根据文件名搜索find . -name filename -print
+　　tee: 将数据输出到标准输出设备(屏幕) 和文件比如：somecommand | tee outfile
+　　basename file: 返回不包含路径的文件名比如： basename /bin/tux将返回 tux
+　　dirname file: 返回文件所在路径比如：dirname /bin/tux将返回 /bin
+　　head file: 打印文本文件开头几行
+　　tail file : 打印文本文件末尾几行
+　　sed: Sed是一个基本的查找替换程序。可以从标准输入（比如命令管道）读入文本，并将结果输出到标准输出（屏幕）。该命令采用正则表达式（见参考）进行搜索。不要和shell中的通配符相混淆。比如：将linuxfocus 替换为 LinuxFocus ：cat text.file | sed 's/linuxfocus/LinuxFocus/' > newtext.file
+　　awk: awk 用来从文本文件中提取字段。缺省地，字段分割符是空格，可以使用-F指定其他分割符。cat file.txt | awk -F, '{print $1 "," $3 }'这里我们使用，作为字段分割符，同时打印第一个和第三个字段。如果该文件内容如下： Adam Bor, 34, IndiaKerry Miller, 22, USA命令输出结果为：Adam Bor, IndiaKerry Miller, USA
+2) 概念: 管道, 重定向和 backtick
+　　这些不是系统命令，但是他们真的很重要。
+　　管道 (|) 将一个命令的输出作为另外一个命令的输入。
+grep "hello" file.txt | wc -l
+　　在file.txt中搜索包含有”hello”的行并计算其行数。
+　　在这里grep命令的输出作为wc命令的输入。当然您可以使用多个命令。
+　　重定向：将命令的结果输出到文件，而不是标准输出（屏幕）。
+　　> 写入文件并覆盖旧文件
+　　>> 加到文件的尾部，保留旧文件内容。
+反短斜线
+　使用反短斜线可以将一个命令的输出作为另外一个命令的一个命令行参数。
+　　命令：
+find . -mtime -1 -type f -print
+　　用来查找过去24小时（-mtime –2则表示过去48小时）内修改过的文件。如果您想将所有查找到的文件打一个包，则可以使用以下脚本：
+#!/bin/sh
+# The ticks are backticks (`) not normal quotes ('):
+tar -zcvf lastmod.tar.gz `find . -mtime -1 -type f -print`
+　　3) 流程控制
+　　"if" 表达式 如果条件为真则执行then后面的部分：
+if ....; then
+　 ....
+elif ....; then
+　 ....
+else
+　 ....
+fi
+　　大多数情况下，可以使用测试命令来对条件进行测试。比如可以比较字符串、判断文件是否存在及是否可读等等…
+　　通常用" [ ] "来表示条件测试。注意这里的空格很重要。要确保方括号的空格。
+[ -f "somefile" ] ：判断是否是一个文件
+[ -x "/bin/ls" ] ：判断/bin/ls是否存在并有可执行权限
+[ -n "$var" ] ：判断$var变量是否有值
+[ "$a" = "$b" ] ：判断$a和$b是否相等
+　　执行man test可以查看所有测试表达式可以比较和判断的类型。
+　　直接执行以下脚本：
+#!/bin/sh
+if [ "$SHELL" = "/bin/bash" ]; then
+　echo "your login shell is the bash (bourne again shell)"
+else
+　echo "your login shell is not bash but $SHELL"
+fi
+　　变量$SHELL包含了登录shell的名称，我们和/bin/bash进行了比较。
+快捷操作符
+　　熟悉C语言的朋友可能会很喜欢下面的表达式：
+[ -f "/etc/shadow" ] && echo "This computer uses shadow passwors"
+　　这里 && 就是一个快捷操作符，如果左边的表达式为真则执行右边的语句。您也可以认为是逻辑运算中的与操作。上例中表示如果/etc/shadow文件存在则打印” This computer uses shadow passwors”。同样或操作(||)在shell编程中也是可用的。这里有个例子：
+#!/bin/sh
+mailfolder=/var/spool/mail/james
+[ -r "$mailfolder" ]' '{ echo "Can not read $mailfolder" ; exit 1; }
+echo "$mailfolder has mail from:"
+grep "^From " $mailfolder
+　　该脚本首先判断mailfolder是否可读。如果可读则打印该文件中的"From" 一行。如果不可读则或操作生效，打印错误信息后脚本退出。这里有个问题，那就是我们必须有两个命令：
+　　-打印错误信息
+　　-退出程序
+　　我们使用花括号以匿名函数的形式将两个命令放到一起作为一个命令使用。一般函数将在下文提及。
+　　不用与和或操作符，我们也可以用if表达式作任何事情，但是使用与或操作符会更便利很多。
+　　case表达式可以用来匹配一个给定的字符串，而不是数字。
+case ... in
+...) do something here ;;
+esac
+　　让我们看一个例子。 file命令可以辨别出一个给定文件的文件类型，比如：
+file lf.gz
+　　这将返回：
+lf.gz: gzip compressed data, deflated, original filename,
+last modified: Mon Aug 27 23:09:18 2001, os: Unix
+　我们利用这一点写了一个叫做smartzip的脚本，该脚本可以自动解压bzip2, gzip 和zip 类型的压缩文件：
+#!/bin/sh
+ftype=`file "$1"`
+case "$ftype" in
+"$1: Zip archive"*)
+　　unzip "$1" ;;
+"$1: gzip compressed"*)
+　　gunzip "$1" ;;
+"$1: bzip2 compressed"*)
+　　bunzip2 "$1" ;;
+*) error "File $1 can not be uncompressed with smartzip";;
+esac
+　　您可能注意到我们在这里使用了一个特殊的变量$1。该变量包含了传递给该程序的第一个参数值。也就是说，当我们运行：
+smartzip articles.zip
+$1 就是字符串 articles.zip
+　　select 表达式是一种bash的扩展应用，尤其擅长于交互式使用。用户可以从一组不同的值中进行选择。
+select var in ... ; do
+　break
+done
+.... now $var can be used ....
+下面是一个例子：
+#!/bin/sh
+echo "What is your favourite OS?"
+select var in "Linux" "Gnu Hurd" "Free BSD" "Other"; do
+　　　　break
+done
+echo "You have selected $var"
+　　下面是该脚本运行的结果：
+What is your favourite OS?
+1) Linux
+2) Gnu Hurd
+3) Free BSD
+4) Other
+#? 1
+You have selected Linux
+　　您也可以在shell中使用如下的loop表达式：
+while ...; do
+....
+done
+　　while-loop 将运行直到表达式测试为真。will run while the expression that we test for is true. 关键字"break" 用来跳出循环。而关键字”continue”用来不执行余下的部分而直接跳到下一个循环。
+　　for-loop表达式查看一个字符串列表 (字符串用空格分隔) 然后将其赋给一个变量：
+for var in ....; do
+　....
+done
+　　在下面的例子中，将分别打印ABC到屏幕上：
+复制代码 代码如下:
+
+#!/bin/sh
+for var in A B C ; do
+　echo "var is $var"
+done
+
+　　下面是一个更为有用的脚本showrpm，其功能是打印一些RPM包的统计信息：
+
+
+	
+#!/bin/sh 
+# list a content summary of a number of RPM packages 
+# USAGE: showrpm rpmfile1 rpmfile2 ... 
+# EXAMPLE: showrpm /cdrom/RedHat/RPMS/*.rpm 
+for rpmpackage in $*; do
+　if [ -r "$rpmpackage" ];then
+　　echo "=============== $rpmpackage =============="
+　　rpm -qi -p $rpmpackage 
+　else
+　　echo "ERROR: cannot read file $rpmpackage"
+　fi
+done
+
+　　这里出现了第二个特殊的变量$*，该变量包含了所有输入的命令行参数值。如果您运行showrpm openssh.rpm w3m.rpm webgrep.rpm
+　　此时 $* 包含了 3 个字符串，即openssh.rpm, w3m.rpm and webgrep.rpm.
+引号
+　　在向程序传递任何参数之前，程序会扩展通配符和变量。这里所谓扩展的意思是程序会把通配符（比如*）替换成合适的文件名，它变量替换成变量值。为了防 止程序作这种替换，您可以使用引号：让我们来看一个例子，假设在当前目录下有一些文件，两个jpg文件， mail.jpg 和tux.jpg。
+
+#!/bin/sh
+echo *.jpg
+　　这将打印出"mail.jpg tux.jpg"的结果。
+　　引号 (单引号和双引号) 将防止这种通配符扩展：
+#!/bin/sh
+echo "*.jpg"
+echo '*.jpg'
+　　这将打印"*.jpg" 两次。
+　　单引号更严格一些。它可以防止任何变量扩展。双引号可以防止通配符扩展但允许变量扩展。
+#!/bin/sh
+echo $SHELL
+echo "$SHELL"
+echo '$SHELL'
+　　运行结果为：
+/bin/bash
+/bin/bash
+$SHELL
+　　最后，还有一种防止这种扩展的方法，那就是使用转义字符——反斜杆：
+echo *.jpg
+echo $SHELL
+　　这将输出：
+*.jpg
+$SHELL
+Here documents
+　　当要将几行文字传递给一个命令时，here documents（译者注：目前还没有见到过对该词适合的翻译）一种不错的方法。对每个脚本写一段帮助性的文字是很有用的，此时如果我们四有那个 here documents就不必用echo函数一行行输出。 一个 "Here document" 以 << 开头，后面接上一个字符串，这个字符串还必须出现在here document的末尾。下面是一个例子，在该例子中，我们对多个文件进行重命名，并且使用here documents打印帮助：
+复制代码 代码如下:
+
+#!/bin/sh
+# we have less than 3 arguments. Print the help text:
+if [ $# -lt 3 ] ; then
+cat <
+ren -- renames a number of files using sed regular expressions
+USAGE: ren 'regexp' 'replacement' files...
+EXAMPLE: rename all *.HTM files in *.html:
+　ren 'HTM$' 'html' *.HTM
+HELP
+　exit 0
+fi
+OLD="$1"
+NEW="$2"
+# The shift command removes one argument from the list of
+# command line arguments.
+shift
+shift
+# $* contains now all the files:
+for file in $*; do
+　　if [ -f "$file" ] ; then
+　　　newfile=`echo "$file" | sed "s/${OLD}/${NEW}/g"`
+　　　if [ -f "$newfile" ]; then
+　　　　echo "ERROR: $newfile exists already"
+　　　else
+　　　　echo "renaming $file to $newfile ..."
+　　　　mv "$file" "$newfile"
+　　　fi
+　　fi
+done
+
+　　这是一个复杂一些的例子。让我们详细讨论一下。第一个if表达式判断输入命令行参数是否小于3个 (特殊变量$# 表示包含参数的个数) 。如果输入参数小于3个，则将帮助文字传递给cat命令，然后由cat命令将其打印在屏幕上。打印帮助文字后程序退出。如果输入参数等于或大于3个，我们就将第一个参数赋值给变量OLD，第二个参数赋值给变量NEW。下一步，我们使用shift命令将第一个和第二个参数从参数列表中删除，这样原来的第三个参数就成为参数列表$*的第一个参数。然后我们开始循环，命令行参数列表被一个接一个地被赋值给变量$file。接着我们判断该文件是否存在，如果存在则通过sed命令搜索和替换来产生新的文件名。然后将反短斜线内命令结果赋值给newfile。这样我们就达到了我们的目的：得到了旧文件名和新文件名。然后使用mv命令进行重命名。
+函数
+　　如果您写了一些稍微复杂一些的程序，您就会发现在程序中可能在几个地方使用了相同的代码，并且您也会发现，如果我们使用了函数，会方便很多。一个函数是这个样子的：
+复制代码 代码如下:
+
+functionname()
+{
+# inside the body $1 is the first argument given to the function
+# $2 the second ...
+body
+}
+
+　　您需要在每个程序的开始对函数进行声明。
+
+　　下面是一个叫做xtitlebar的脚本，使用这个脚本您可以改变终端窗口的名称。这里使用了一个叫做help的函数。正如您可以看到的那样，这个定义的函数被使用了两次。
+复制代码 代码如下:
+
+#!/bin/sh
+# vim: set sw=4 ts=4 et:
+help()
+{
+　　cat <
+xtitlebar -- change the name of an xterm, gnome-terminal or kde konsole
+USAGE: xtitlebar [-h] "string_for_titelbar"
+OPTIONS: -h help text
+EXAMPLE: xtitlebar "cvs"
+HELP
+　　exit 0
+}
+# in case of error or if -h is given we call the function help:
+[ -z "$1" ] && help
+[ "$1" = "-h" ] && help
+# send the escape sequence to change the xterm titelbar:
+echo -e "33]0;$107"
+
+#
+　　在脚本中提供帮助是一种很好的编程习惯，这样方便其他用户（和您）使用和理解脚本。
+命令行参数
+　　我们已经见过$* 和 $1, $2 ... $9 等特殊变量，这些特殊变量包含了用户从命令行输入的参数。迄今为止，我们仅仅了解了一些简单的命令行语法（比如一些强制性的参数和查看帮助的-h选项）。但是在编写更复杂的程序时，您可能会发现您需要更多的自定义的选项。通常的惯例是在所有可选的参数之前加一个减号，后面再加上参数值 (比如文件名)。
+　　有好多方法可以实现对输入参数的分析，但是下面的使用case表达式的例子无遗是一个不错的方法。
+复制代码 代码如下:
+
+#!/bin/sh
+help()
+{
+　cat <
+This is a generic command line parser demo.
+USAGE EXAMPLE: cmdparser -l hello -f -- -somefile1 somefile2
+HELP
+　exit 0
+}
+while [ -n "$1" ]; do
+case $1 in
+　　-h) help;shift 1;; # function help is called
+　　-f) opt_f=1;shift 1;; # variable opt_f is set
+　　-l) opt_l=$2;shift 2;; # -l takes an argument -> shift by 2
+　　--) shift;break;; # end of options
+　　-*) echo "error: no such option $1. -h for help";exit 1;;
+　　*) break;;
+esac
+done
+
+echo "opt_f is $opt_f"
+echo "opt_l is $opt_l"
+echo "first arg is $1"
+echo "2nd arg is $2"
+
+　　您可以这样运行该脚本：
+cmdparser -l hello -f -- -somefile1 somefile2
+　　返回的结果是：
+opt_f is 1
+opt_l is hello
+first arg is -somefile1
+2nd arg is somefile2
+　　这个脚本是如何工作的呢？脚本首先在所有输入命令行参数中进行循环，将输入参数与case表达式进行比较，如果匹配则设置一个变量并且移除该参数。根据unix系统的惯例，首先输入的应该是包含减号的参数。
+实例
+　　一般编程步骤
+　　现在我们来讨论编写一个脚本的一般步骤。任何优秀的脚本都应该具有帮助和输入参数。并且写一个伪脚本（framework.sh），该脚本包含了大多数脚本都需要的框架结构，是一个非常不错的主意。这时候，在写一个新的脚本时我们只需要执行一下copy命令：
+cp framework.sh myscript
+　然后再插入自己的函数。
+　　让我们再看两个例子：
+　　二进制到十进制的转换
+　　脚本 b2d 将二进制数 (比如 1101) 转换为相应的十进制数。这也是一个用expr命令进行数学运算的例子：
+复制代码 代码如下:
+
+#!/bin/sh
+# vim: set sw=4 ts=4 et:
+help()
+{
+　cat <
+b2h -- convert binary to decimal
+USAGE: b2h [-h] binarynum
+OPTIONS: -h help text
+EXAMPLE: b2h 111010
+will return 58
+HELP
+　exit 0
+}
+error()
+{
+　　# print an error and exit
+　　echo "$1"
+　　exit 1
+}
+lastchar()
+{
+　　# return the last character of a string in $rval
+　　if [ -z "$1" ]; then
+　　　　# empty string
+　　　　rval=""
+　　　　return
+　　fi
+　　# wc puts some space behind the output this is why we need sed:
+　　numofchar=`echo -n "$1" | wc -c | sed 's/ //g' `
+　　# now cut out the last char
+　　rval=`echo -n "$1" | cut -b $numofchar`
+}
+
+chop()
+{
+　　# remove the last character in string and return it in $rval
+　　if [ -z "$1" ]; then
+　　　　# empty string
+　　　　rval=""
+　　　　return
+　　fi
+　　# wc puts some space behind the output this is why we need sed:
+　　numofchar=`echo -n "$1" | wc -c | sed 's/ //g' `
+　　if [ "$numofchar" = "1" ]; then
+　　　　# only one char in string
+　　　　rval=""
+　　　　return
+　　fi
+　　numofcharminus1=`expr $numofchar "-" 1`
+　　# now cut all but the last char:
+　　rval=`echo -n "$1" | cut -b 0-${numofcharminus1}`
+}
+while [ -n "$1" ]; do
+case $1 in
+　　-h) help;shift 1;; # function help is called
+　　--) shift;break;; # end of options
+　　-*) error "error: no such option $1. -h for help";;
+　　*) break;;
+esac
+done
+# The main program
+sum=0
+weight=1
+# one arg must be given:
+[ -z "$1" ] && help
+binnum="$1"
+binnumorig="$1"
+
+while [ -n "$binnum" ]; do
+　　lastchar "$binnum"
+　　if [ "$rval" = "1" ]; then
+　　　　sum=`expr "$weight" "+" "$sum"`
+　　fi
+　　# remove the last position in $binnum
+　　chop "$binnum"
+　　binnum="$rval"
+　　weight=`expr "$weight" "*" 2`
+done
+echo "binary $binnumorig is decimal $sum"
+#
+
+　　该脚本使用的算法是利用十进制和二进制数权值 (1,2,4,8,16,..)，比如二进制"10"可以这样转换成十进制：
+0 * 1 + 1 * 2 = 2
+　　为了得到单个的二进制数我们是用了lastchar 函数。该函数使用wc –c计算字符个数，然后使用cut命令取出末尾一个字符。Chop函数的功能则是移除最后一个字符。
+　　文件循环程序
+　　或许您是想将所有发出的邮件保存到一个文件中的人们中的一员，但是在过了几个月以后，这个文件可能会变得很大以至于使对该文件的访问速度变慢。下面的脚本rotatefile 可以解决这个问题。这个脚本可以重命名邮件保存文件（假设为outmail）为outmail.1，而对于outmail.1就变成了outmail.2 等等等等...
+复制代码 代码如下:
+
+#!/bin/sh
+# vim: set sw=4 ts=4 et:
+ver="0.1"
+help()
+{
+　　cat <
+rotatefile -- rotate the file name
+
+USAGE: rotatefile [-h] filename
+
+OPTIONS: -h help text
+EXAMPLE: rotatefile out
+This will e.g rename out.2 to out.3, out.1 to out.2, out to out.1
+and create an empty out-file
+The max number is 10
+version $ver
+HELP
+　　exit 0
+}
+
+error()
+{
+　　echo "$1"
+　　exit 1
+}
+while [ -n "$1" ]; do
+case $1 in
+　　-h) help;shift 1;;
+　　--) break;;
+　　-*) echo "error: no such option $1. -h for help";exit 1;;
+　　*) break;;
+esac
+done
+# input check:
+if [ -z "$1" ] ; then
+error "ERROR: you must specify a file, use -h for help"
+fi
+filen="$1"
+# rename any .1 , .2 etc file:
+for n in 9 8 7 6 5 4 3 2 1; do
+　　if [ -f "$filen.$n" ]; then
+　　　　p=`expr $n + 1`
+　　　　echo "mv $filen.$n $filen.$p"
+　　　　mv $filen.$n $filen.$p
+　　fi
+done
+# rename the original file:
+if [ -f "$filen" ]; then
+　　echo "mv $filen $filen.1"
+　　mv $filen $filen.1
+fi
+echo touch $filen
+touch $filen
+
+　　这个脚本是如何工作的呢？在检测用户提供了一个文件名以后，我们进行一个9到1的循环。文件9被命名为10，文件8重命名为9等等。循环完成之后，我们将原始文件命名为文件1同时建立一个与原始文件同名的空文件。
+调试
+　　最简单的调试命令当然是使用echo命令。您可以使用echo在任何怀疑出错的地方打印任何变量值。这也是绝大多数的shell程序员要花费80%的时间来调试程序的原因。Shell程序的好处在于不需要重新编译，插入一个echo命令也不需要多少时间。
+　　shell也有一个真实的调试模式。如果在脚本"strangescript" 中有错误，您可以这样来进行调试：
+sh -x strangescript
+　　这将执行该脚本并显示所有变量的值。
+　　shell还有一个不需要执行脚本只是检查语法的模式。可以这样使用：
+sh -n your_script
+　　这将返回所有语法错误。
+　　我们希望您现在可以开始写您自己的shell脚本，希望您玩得开心。
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+Shell就是一个命令行解释器，它的作用就是遵循一定的语法将输入的命令加以解释并传给系统。它为用户提供了一个向Linux发送请求以便运行程序的接口系统级程序，用户可以用Shell来启动、挂起、停止甚至是编写一些程序。 Shell本身是一个用C语言编写的程序，它是用户使用Linux的桥梁。Shell既是一种命令语言，又是一种程序设计语言。
+
+<1> shell脚本--> 命令行解析器
+    是一个文件，命令的有序集合
+    脚本文件以“.sh”结尾
+-----------------------------------------------------------------------------------------
+<2> 运行一个shell脚本文件：第一种：使用系统的bash
+        bash shell.sh
+
+
+                       第二种：给shell脚本文件赋予可执行的权限
+                               ./shell.sh
+-----------------------------------------------------------------------------------------
+<3> 脚本语言都是弱类型：
+              shell变量没有类型
+ 
+                       C语言是编译型语言，shell是解释型语言。
+-----------------------------------------------------------------------------------------
+<4> shell脚本变量命名规则：
+      1. 见名知义
+
+
+      2. 由字母、下划线、数字组成
+
+
+      3. ----不能以数字开头------
+-----------------------------------------------------------------------------------------
+<5> 变量赋值：
+C语言:
+                       int var = 5；
+ 
+                shell:
+                           var=5;
+                       注意：在变量赋值的时候等号两边不能有空格
+-----------------------------------------------------------------------------------------
+<6> 变量的引用（输出）：
+                使用echo：
+echo $var
+注意：在变量的输出时要加（$）符号
+-----------------------------------------------------------------------------------------
+<7> 内置环境变量：
+ PATH    HOME   USER   HOSTTYPE
+-----------------------------------------------------------------------------------------
+<8> 内置位置变量：
+ 1.$0 : shell脚本文件名
+ 2.$1-$9 : 命令行传入的参数，从脚本文件名后一个参数开始
+   3.$* : 命令行传入的所有参数，除了脚本文件名
+ 4.$@ : 命令行传入的所有参数，除了脚本文件名
+ 5.$$ : shell脚本的进程号
+-----------------------------------------------------------------------------------------
+<9> shell脚本控制语句：
+  
+ 1.输入 : read
+执行脚本的时候从终端获取一个值赋值给read的变量。
+
+read var
+echo $var
+ 
+read var1 var2
+第一个参数给var1，后面所有的参数都给var2。
+
+ 2.算术运算 : 
+进行算术运算： expr
+expr 1 + 2
+注意：expr、数字和运算符之间都要加空格。
+
+进行算术运算： let
+let var=1+2
+注意：变量、数字和运算符之间都不要加空格。
+
+                   
+
+
+                   3. test与[ ] :
+  使用[ ]的时候特别要主要中括号的前后都需要有空格。
+查看帮助文档：
+man test
+
+
+        (1) 字符串：-n：测试字符串的长度不为0（nonzero）
+ -z：测试字符串的长度为0（zero）
+  =：测试两个字符串相等（equal）
+ !=：测试两个字符串不相等（not equal）
+
+
+     （2）整数：-eq：测试两个整数相等（equal）
+-gt：测试一个整数大于另外一个整数（greater than）
+-ge：测试一个整数大于或等于另外一个整数（greater than or equal）
+-le：测试一个整数小于或等于另外一个整数（less than or equal）
+-lt：测试一个整数小于另外一个整数（less than）
+-ne：测试一个整数不等于另外一个整数（not equal）
+
+     （3）表达式：-a：两个表达式为真最终结果为真       （and）
+  -o：有一个表达式为真整个表达式为真   （or）
+
+
+  ！：表达式为假
+
+
+     （4）文件： -e：测试文件是否存在（exists）
+ -d：测试存在并且是否为一个目录（directory）
+ -f：测试存在并且是否是一个普通文件（regular）
+ -w：测试文件是否可写（write）
+ -r：测试文件是否可读（read）
+ -x：测试文件是否可执行（execute）
+ 
+ [ -f file ]  ：测试文件存在并且是一个普通文件
+ ! [ -f file ] ：测试文件不存在
+ [ ! -f file ]
+-----------------------------------------------------------------------------------------
+<10> 控制语句：
+   1. if 语句:
+  C语言形式:
+for(expr1;expr2;expr3){
+ Code;
+}
+ 
+shell:
+for 变量名 in list(列表，单词表)
+do
+   CMD
+done
+
+运行原理：
+根据单词表中的值的个数来决定循环的次数。
+即把单词表（list）中的值分别按顺序的给变量进行赋值，一直到最后一个值为止。
+单词表的构建：
+1.直接列举
+2.通过命令行获取（$*/$@）
+3.通过命令置换（`ls`）
+4.通过子shell（$()）
+ 
+for 变量名
+do
+    CMD
+done
+这种形式的单词表在命令行
+-------------------------------------------------------------------------
+2. case 语句：
+C语言形式：
+switch(const_expr){
+    case const_expr1:
+        C;
+        break;
+ 
+    case const_expr2:
+          C;
+        break;
+    default:
+      C;
+          break;
+}
+
+
+shell:
+case 变量的引用  in
+        模式1）
+        CMD
+        ；；
+          模式2）
+          CMD
+          ；；
+          *）
+          CMD 
+          ；；
+  esac  
+-------------------------------------------------------------------------
+3. for 语句：
+C语言形式:
+for(expr1;expr2;expr3){
+    Code;
+}
+ 
+shell:
+for 变量名 in list(列表，单词表)
+do
+    CMD
+done
+运行原理：
+根据单词表中的值的个数来决定循环的次数。
+即把单词表（list）中的值分别按顺序的给变量进行赋值，一直到最后一个值为止。
+单词表的构建：
+1.直接列举
+2.通过命令行获取（$*/$@）
+3.通过命令置换（`ls`）
+4.通过子shell（$()）
+ 
+for 变量名
+do
+    CMD
+done
+这种形式的单词表在命令行
+-------------------------------------------------------------------------
+4.while语句 ：
+C：
+while(expr){ 
+    Code;
+}
+
+
+shell：
+while [ expr ]
+do
+    CMD
+done
+-----------------------------------------------------------------------------------------
+<11>  函数：
+C语言形式：
+void test(){
+    Code;
+}
+调用：
+test();
+ 
+shell：
+第一种：
+function test(){
+    CMD
+}
+ 
+第二种：
+test(){
+    CMD
+}
+调用
+第一种：
+直接函数的名字
+test_1
+test_2 
+  
+第二种：
+命令置换
+`test_1`
+`test_1` 
+ 
+注意：
+1.函数不能返回字符串
+2.shell中的变量都是全局变量，如果希望这个变量是局部的加限定词：local
+
+====================================================================================================================================
+====================================================================================================================================
+
+            linux 操作系统 
+
+一.linux 操作系统概述
+
+    1.常见操作系统
+       - 服务端操作系统 ： linux、unix、windows server 
+       - 单机操作系统 ： windows（dos 、ucdos、win95、win98、win2000、xp、vista、win7、win8）
+                         MAC 、linux（ubuntu）
+       - 移动操作系统 Android、IOS 、Windows phone
+    2.linux操作系统介绍
+
+      - 为什么要学习linux操作系统 
+        1. 大部分服务端都采用linux ，JEE部署到服务器中
+        2. 一些企业和学校采用linux研发和教学 
+	3. 很多嵌入式开发 用linux  
+        4. 云计算、大数据 是集群网  linux : centos 
+      - 特点   
+        1. 开放、开源、多用户的网络操作系统
+	2. 基于unix（unix-->minix-->linux(linus :林纳斯 芬兰 )），可以定制内核
+	3. 假如了GNU组织（自由软件组织 ，copyLeft） ，通过GPL（通用公共许可） 许可对外发布  
+      - linux组成
+         1. linux内核（linus 团队管理）
+	 2. shell ：用户与内核交互的接口
+	 3. 文件系统 ： ext3、ext4 等  windows 有 fat32  、ntfs 
+	 4. 第三方应用软件 
+	
+      - linux操作系统版本   
+        1. 内核版本 (linus 团队管理)  3.8
+	2. 发行版本  :一些软件公司以内核为基础，再添加一些软件和文档形成发行版本
+	   - red hat  ： rhel ，centos
+	   - debian   ： debian，ubuntu（桌面）
+	   - android  
+二.安装linux系统
+
+   1. vmware安装 ： 创建虚拟机的软件 
+      vitual box ：oracle 公司提供
+
+   2. 虚拟机安装
+      - 直接安装
+        - 创建虚拟机
+	- 安装ubuntu镜像
+      - 打开虚拟机镜像： 虚拟机+操作系统（ubuntu）
+        1. 打开*.vmx 文件
+	2. 用户名  itcast  密码  123
+        
+三.linux系统环境  
+   默认有6个命令交互通道和一个图形界面交互通道，默认进入到的是图形界面通道
+     命令交互模式切换：ctrl+alt+f1---f6
+     图形交互界面 ctrl+alt+f7
+   
+   1.图形界面交互模式
+     - terminal： 图形界面的命令终端，它是图形界面交互通道的延伸，要依赖于图形界面
+                  
+    
+   2.命令交互模式 
+      命令提示符：
+      itcast@ubuntu:~$ 
+        - itcast：用户名
+	- ubuntu ：主机名
+	- ~  ：路径 ，假如当前的路径正好是 该用户存放数据的根目录 ，则显示~
+	- $ :用户的类型  $代表普通用户  #  代表 超级用户
+      
+   3.linux文件系统 
+
+    - 目录结构
+    - 文件权限分析
+      w ：可写   r： 只读  x：可执行  - ：无权限
+      文件权限
+       1. 字符表示法
+         drwxr-xr-x
+	  第一个字符 ：文件的类型  d ：普通文件  - ：文件夹  c ：串口文件  l ：连接文件
+           2-4 字符  ： 该文件的属主用户的权限 
+	   5-7  字符 ： 与属主用户同一组的其他用户的权限
+	   8-10 字符 ：  不同组的其他用户的权限
+        2. 数字表示法
+	   -rw-r--r--   ：文件的默认权限   644
+	   drwxr-xr-x   ： 目录的默认权限  755  
+     
+四、linux的常用命令 
+
+   1.注销、关机、重启
+     - 注销 ：logout ：登出 、exit 
+     - 关机 ：
+        shutdown - h  时间
+	  - h ：关机
+	  - 时间 ：
+	    1. now :马上
+	    2. 12.30 ：指定具体时间
+	    3. 3  ：几分钟以后
+	 sudo ： superuser do ：由超级用户来执行该命令
+	   要配置sudo 命令 ： 授权 哪些用户能执行哪些命令
+	    由超级用户配置  sudo 
+	     /etc/sudoers 
+	   sudo shutdown -h now    当前账号：itcast  
+     - 重启 ：
+        shutdown -r  时间
+	  -r ：restart 
+   2.linux基本命令 ：文件操作命令
+    
+     1. ls   ： 查看目录内容
+        - l ：查看详细信息
+	- a ：查看所有文件（隐藏）
+        man ：manual ： 手工，帮助 ，帮助命令，好比windows help 
+	 命令： man ls
+     2. mkdir ：创建目录 
+          Desktop：
+	    - java
+	      - JEE ： aa.txt  bb.txt  
+	      - Android
+     3. cd  切换目录
+        - cd ..  记得要加空格
+	- cd ./java  进入当前目录的子目录
+	- cd ../xxx  进入上一级目录的子目录
+	   tab ：自动补全
+     4. touch  ：创建一个空白的普通文件
+        touch aa.txt 
+     5. echo  :把内容重定向到指定的文件中 ，有则打开，无则创建
+     6. cat、more  ：查看文件内容
+        - cat ：查看文件内容
+	- more ：分页查看文件内容，按空格键换页
+	     
+     7. cp、mv、rm   
+        - cp ：复制
+	   cp bj.txt ./java/jee
+	- mv ：剪切、重命名
+	   1. 剪切 ：mv aa.txt ../android/
+	   2. 重命名 ：假如剪切的文件 存放在同一个目录中 ，则是重命名
+	       mv bb.txt cc.txt
+
+	- rm ：删除文件或者文件夹
+	  -f ： 假如要删除的文件不存在，也不提示
+	  -i ： 删除前提示 ，默认不删除，要删除，输入y
+	  -d ： 删除空白目录 
+	  -r ：递归删除
+     8. wc ：word count ：统计字符数
+         154  233 3418 
+	 - 154 ：行数
+	 - 233 ：单词数
+	 - 3418 ：字符数
+       命令： wc bj.txt
+        
+     9. ln :创建连接文件
+        - 默认创建的是硬连接，好比复制 ，但是两个文件会同步 
+	   命令：ln ./java/android/aa.txt  aaa
+	- s ：创建的是软连接
+        
+     10. pwd   ：查看当前目录的绝对路径 
+       
+     11. 管道命令 |
+       命令： ls -la | wc 
+     12. 重定向
+        - > :覆盖模式
+	命令：  echo "ww">aaa
+	- >>：追加模式
+	命令： echo "ww">>aaa
+     13. passwd   :设置密码  ，ubuntu默认 root账号是没有开启 ，只要设置root密码即可开启
+         sudo passwd root
+
+     14. su  切换目录
+         su root 
+	 root用户切换到其他账号不需要密码
+
+   3.linux 系统命令
+     1.stat   ：查看文件的详细信息
+       stat bj.txt
+     2.who与whoami
+       who : 查看在线的用户
+       whoami ：查看当前自己的用户
+     3.hostname ： 显示主机名
+       hostname
+     4.uname  ：显示系统信息
+        -a ：显示完整的系统信息
+        
+     5.top ：显示当前耗时的进行的信息 ，每3秒刷新一次 
+         cltr+c 中断 
+     6.ps ：显示当前进程的快照 
+       - axu
+     7.du ：显示文件的大小信息 
+     8.df ：磁盘使用情况  disk free
+     9.ifconfig ：查看或者配置网卡信息 ，好比windows 的ipconfig
+        ipv4：32位  2-32次方     ipv6  128位     是 ipv4  2-96次方倍数
+	设置虚拟机ip地址：
+	  1. 设置vmware的连接方式
+	     - 共享宿主机的ip地址，在网上邻居找不到
+	     - 桥接方式，需要单独设置ip，可以在网上邻居查找
+	  2. 图形界面设置ip地址 
+	      edit connection --》ipv4--》manual（手工设置）--》add  （ip地址，子网掩码）
+          3.命令方式设置ip地址
+	     静态设置ip：
+	     sudo ifconfig eth0 192.168.15.122 netmask 255.255.255.0 
+	    
+     10.ping  测试与目标主机连接情况
+        
+
+     11.clear  ： 清除屏幕  windows： cls  
+     12.man  ：帮助命令
+         man 命令
+     13.kill  ：杀死进程
+        kill  pid 
+     14.netstat  ：网络连接详细信息
+       
+     15. useradd 
+        - 查看用户信息
+	   sudo cat /etc/passwd
+	 itcast:x:1000:1000:UbuntuA,,,:/home/itcast:/bin/bash
+	  - itcast:用户名
+	  - x ：密码 ：已经加密 ，密码存放在  /etc/shadow 
+	  - 1000: 账号id ，userId
+	  - 1000： 组id ，group id
+          - UbuntuA,,,  ：账号描述
+          - /home/itcast ：该账号存放文件的默认位置  ~
+	  - /bin/bash：该用户的shell脚本的解析方式  ，sh 、bash、rbash
+ 
+        - 创建用户 
+	  sudo useradd lijun -d  /home/lijun   -s /bin/bash 
+	   -d :指定该用户的home 路径 
+	   - s ：该用户的shell解析方式
+	  步骤：
+	    1. 创建 /home/lijun 目录
+	    2. 执行 useradd 命令
+	    3. 用 passwd 设置密码
+	    4. su 切换用户
+
+
+       
+ 五、打包、压缩文件   
+    windows ： zip、rar    
+    linux ：gz ，bzip，zip
+
+     1.tar :打包、拆包命令 
+        tar - cxzjvf  <打包后的文件>   <欲打包的目录>
+	  - c ：创建的一个归档文件 ，即打包文件夹
+	  - x ：拆包
+	  - z ：以gzip 格式压缩，默认压缩倍数 6倍  （0-9）
+	  - j ：以bzip2格式压缩
+	  - v ：显示打包或者拆包的文件信息
+	  - f ： 后面紧接一个 归档文件,就是要打包的文件
+
+       - 打包文件
+          tar -cvf news.tar  ./java   摘要  
+       - 拆包文件
+          tar -xvf news.tar
+     2.gzip 、bzip2 压缩与解压
+        1. 压缩文件
+	  gzip news.tar
+	2. 解压文件
+	  gzip -d news.tar.gz
+	    -d :解压
+     3.打包及压缩 
+       - 打包及压缩
+          tar -czvf news.tar.gz ./java
+       - 拆包及压解缩
+          tar -xzvf  news.tar.gz
+
+ 六、软件管理 
+    windows ： .exe     安装 、卸载 
+       安装：  mysql.exe  cc.exe   
+       卸载 ： 该软件唯一的标识  ，包名   alibaba
+    android : *.apk   卸载 包名
+    red hat ：*.rpm 
+    ubuntu  : 对debian的升级  *.deb 格式
+
+
+     1.安装软件
+       - dpkg ：debian  package 
+          离线安装：
+	  安装 ： sudo dpkg - i  <文件名> 
+	    -i ：install
+	   命令：sudo dpkg -i ./tree_1.6.0-1_i386.deb
+	  卸载 ： sudo dpkg - r  <包名> 
+	    -r ：remove
+           命令：sudo dpkg -r tree
+       - apt-get  ：advance  package  tools 
+       　　对dpkg命令的升级，在线安装
+	  安装 ： sudo apt-get -install  <包名>
+	  卸载 ： sudo apt-get -remove  <包名>
+     2.vim 软件  ：好比记事本 ，但是比记事本要强大  
+        
+	 1. 安装vim
+	 2. 使用vim 
+	   操作模式：
+	     1. 一般模式 ，默认进入的一般模式，该模式不能编辑文档 ，只能查看
+	        按 i（insert）  进入 插入模式 
+	     2. 编辑模式、插入模式 
+	         该模式可以编辑文档，按esc 退出插入模式，进入到一般模式 
+	     3. 命令模式 ：在 一般模式中按：进入命令模式
+	        - q： 安全退出，当没有操作该文档，则直接按q退出vim 
+		- q! ：当修改了内容，但是不想保存，则q！强制退出
+		- wq ：保存退出
+		- set number 显示行号
+		- set nonumber 取消行号显示
+	       
+
+	 
+ 七、搭建Java服务器，并且实现远程安全访问linux系统
+    
+    1.通过ssh实现安全远程访问linux系统 
+       ssh ：secure shell
+         加密：
+	   1. 对称加密 （加密密钥与解密密钥相同）
+	      des 、aes
+	   2. 非对称加密（加密密钥与解密密钥不同）
+	      RSA ：公钥、私钥 
+	 数字摘要：
+	   md5 \sha1 
+	    
+      
+       1. 查看是否安装了ssh服务端与客户端
+         sudo apt-cache policy openssh-client openssh-server
+       2. 安装ssh 服务端与客户端软件
+          sudo dpkg -i ./ssh/*
+           
+       3. 通过windows ssh客户端来访问linux服务端
+          - putty ：远程登录
+	  - winscp433setup.exe ：文件传输
+
+    2. 安装jdk
+       进入 root用户
+       实现步骤：
+        1. jdk 存放在哪里  /opt
+	2. 把软件拷贝到/opt
+	3. 绿色软件，解压 
+	4.设置环境变量
+	   vim /etc/profile 
+	export JAVA_HOME="/opt/jdk1.6.0_39"
+        export PATH="$JAVA_HOME/bin:$PATH"
+	5. 刷新配置 ，让配置生效
+	   source /etc/profile
+	6. 编写Demo.java,测试 
+	   -javac Demo.java
+           - java Demo
+
+    3. 安装tomcat 
+       步骤：
+        1. 安装在哪里 /opt
+	2. 拷贝、解压
+	   tar -xzvf  apache-tomcat.tar.gz
+	3. 运行
+	   - ./startup.sh
+	   - ./shutdown.sh
+       
+      
+    4. 安装Eclipse
+       步骤：
+         1.安装在/opt
+	 2. 拷贝、解压
+	   cp eclipse.tar.gz  /opt
+	   tar -xzvf  eclipse.tar.gz
+	  
+重点：
+  1.linux系统环境
+     命令交互通道
+     命名提示符
+  2. linux 目录结构、文件权限
+    drwxr-xr-x
+  3. linux 命令
+    - 开关机
+    - 文件操作 
+    - 系统命令
+       1. top 2. who 3. ifconfig 4. ping 5. kill 6. man 7.clear 8.netstat
+  4. 软件管理
+     - dpkg ：离线  .deb  .rpm  .apk 
+     - apt-get ：在线 
+  5. 压缩解压
+     tar -cxgzvf 打包后的文件 要打包的文件
+  6. vim 的使用
+     三种模式
+  7. ssh理解 secure shell
+  8. java开发环境搭建
+
+
+====================================================================================================================================
+====================================================================================================================================
+1.什么是shell
+
+shell是一个命令解释器.是介于操作系统kernel（内核）与用户之间的一个绝缘层.准确地说,它也是一种强力的计算机语言。shell的工作形式有两种，一种是交互式，用户输入一条命令，shell解释并执行一条；另一种是批处理，即shell脚本
+
+2.shell脚本
+
+一个shell程序,被称为一个脚本,shell脚本是将各种命令通过逻辑语句组合而成的程序，是一种很容易使用的工具,它可以通过将系统调用,公共程序,工具,和编译过的二进制程序粘合在一起来建立应用.
+3.shell脚本的作用
+
+Shell脚本可以批量的，更便捷的，更灵活的管理系统任务和其它的重复工作的例程。
+
+4.shell脚本的编写格式
+
+一个完整的脚本应该包括“脚本声明”“注释信息”和“可执行语句”
+
+脚本声明即 #！
+
+#！/bin/bash                shell当前运行环境所用的解释器
+
+5.如何运行脚本
+
+方法一：sh  (name.sh )脚本的名称
+
+方法二：
+
+chmod +x 脚本名称
+
+然后在根目录下使用绝对路径调用
+
+编辑shell脚本的规范：
+
+要使得vim自动添加脚本的说明信息，如下：
+
+vim  /etc/vimrc
+
+ 66 map <F4> ms:call WESTOS()<cr>'s
+ 67 function WESTOS()
+ 68         call append(0,  "######################################"    )
+ 69         call append(1,   "#Author              :lee                                                  #"    )
+ 70         call append(2,   " Email               :lee@westos.com                          #"    )
+ 71         call append(3,  "#Version             :1.0                                                 #"    )
+ 72         call append(4,   "#Create_Date         :".strftime("%Y-%m    -%d")."  #"   )
+ 73         call append(5,   "#Description         :                                                    #"    )
+ 74         call append(6,   "######################################"     )
+ 75         call append(7,   "                              ")
+ 76         call append(8,   "#!/usr/bin/env bash")
+ 77 endfunction
+
+
+
+编辑一个脚本：
+
+vim name.sh
+
+按F4可直接导入：
+
+
+常用命令：
+
+1.diff
+
+比较两个文件的不同
+
+diff
+[num1,num2][a|c|d][num3,num4]
+a        添加
+c        改变
+d        删除
+num1,num3    第一个文件的内容
+num3,num4    第二个文件的内容
+
+
+diff -r /mnt/westos/ /mnt/linux/           ##比较两个目录的不同
+diff -u file file1 > file.path            ##比较两个文件的不同，并将不同处写入到.path文件中
+
+yum install -y  patch
+
+patch  file file.path                      ##.path 文件写入到源文件中
+patch -b file file.path        #-b标示备份原文件为file.orig
+
+ 2.grep
+
+grep -n   要过滤的参数                 ##过滤行并显示行号
+grep -n3                                        ##过滤行以及周围的3行
+grep -A3                                       ##过滤并显示后3行
+grep -B3                                       ##过滤并显示前三行
+grep -i                                               ##过滤时不区分大小写
+
+
+
+grep -E                ##同时过滤多个条件                                       
+grep ^test                 ##过滤句子中以test开头
+grep test$                   ##过滤句子中以test结尾
+grep "\<test"               ##过滤文件中以test单词为头
+grep "test\>"               ##过滤文件中以test单词为尾
+
+
+grep hello -r /mnt/               ##找出某个内容所在的目录
+
+
+3.
+cut           ##截取
+cut -c 1-4|1,4          ##截取文件中每一行前4个字符 或者第1个和第4个字符
+
+cut -d : -f 1,7 | -f 1-3    ##以" : " 为间隔符，截取文件中   第1列和第7列      
+
+
+
+
+cut -d : -f 1,7 | -f 1-3    ##以" : " 为间隔符，截取文件中   第1列和第7列
+
+
+
+显示系统中可以登陆的用户
+
+
+
+4..awk
+
+TEST="#################################"
+
+awk -F 分隔符 -v TEST=$TEST  'BEGIN {print TEST} {print $2} END{print TEST}' /etc/passwd
+
+awk -F ":" -v TEST=$TEST 'BEGIN {print TEST ":"} {print $2} END{print TEST}' /etc/passwd
+
+awk '/aa/' file 显示含有aa的行。
+
+awk '{print $1, $2}' file 显示第一第二字段。
+
+awk '/aa/{print $1, $2}' file 将含有aa的行的第一和第二个字段显示出来。
+
+awk -F: '/^root/{print $1, $2}' /etc/passwd 指定:为分隔符，打印第一和第二字段。
+
+awk -F: 'BEGIN{OFS="+++"}/^root/{print $1, $2}' /etc/passwd 以:为分隔符，打印第一和第二段，而且彼此用+++分开。
+
+
+显示 脚本后跟的网卡名称的IP
+
+#!/usr/bin/env bash
+MESSAGE="$1's IP:"
+ifconfig $1 | grep "\<inet\>" |awk -F " " -v MESSAGE="$MESSAGE" 'BEGIN {print MESSAGE} {print $2}'
+
+
+                  
+
+打印脚本后第一个文件中以“：”为分隔符的第一列，并以hello开头
+
+test=hello
+awk -F : -v test=hello 'BEGIN {print test} {print $1}' $1
+
+打印/etc/passwd 中第一行 并且以变量name开头，以end结尾,注意BEGIN后必须跟变量。
+
+[root@client mnt]# awk -F : -v name=$name 'BEGIN{print name} {print $1} END{print "end"}'  /etc/passwd 
+
+
+
+5.echo
+
+echo -n               ##不换行输出
+
+echo -e                ##处理特殊字符
+
+echo -e "\r    \r"
+
+6.sed
+
+sed '1,5s/sbin/westos/g' passwd                     ##替换1-5行中所有sbin为westos
+
+sed '/lp/,/shutdown/s/sbin/westos/g' passwd                     ##从“lp" 所在行开始，至“shutdown“所在行截至的行
+
+sed -e 's/sbin/westos' -e 's/nologin/redhat' passwd          ##替换sbin为westos，并且替换nologin为redhat
+
+sed -n 5p passwd            ##输出第5行
+
+sed ‘s/sbin/westos/g’  -i passwd    ##替换并写入到文件
+
+vim file
+
+s/sbin/westos/g
+
+s/nologin/lee/g
+
+sed -f file passwd 
+
+
+修改apche端口为脚本后的第一串数字
+
+#!/usr/bin/env bash
+Port=`grep "^Listen" /etc/httpd/conf/httpd.conf`
+sed "s/$Port/Listen\ $1/g" -i /etc/httpd/conf/httpd.conf
+echo chage $Port to Listen $1
+systemctl restart httpd
+
+  
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+  
+  
+  
+linux tail命令的使用方法详解
+
+本文介绍Linux下tail命令的使用方法。
+linux tail命令用途是依照要求将指定的文件的最后部分输出到标准设备，通常是终端，通俗讲来，就是把某个档案文件的最后几行显示到终端上，假设该档案有更新，tail会自己主动刷新，确保你看到最新的档案内容。
+
+一、tail命令语法
+
+tail [ -f ] [ -c Number | -n Number | -m Number | -b Number | -k Number ] [ File ]
+参数解释：
+-f 该参数用于监视File文件增长。
+-c Number 从 Number 字节位置读取指定文件
+-n Number 从 Number 行位置读取指定文件。
+-m Number 从 Number 多字节字符位置读取指定文件，比方你的文件假设包括中文字，假设指定-c参数，可能导致截断，但使用-m则会避免该问题。
+-b Number 从 Number 表示的512字节块位置读取指定文件。
+-k Number 从 Number 表示的1KB块位置读取指定文件。
+File 指定操作的目标文件名称
+上述命令中，都涉及到number，假设不指定，默认显示10行。Number前面可使用正负号，表示该偏移从顶部还是从尾部開始计算。
+tail可运行文件一般在/usr/bin/以下。
+
+二、tail命令使用方法演示例子
+
+1、tail -f filename
+说明：监视filename文件的尾部内容（默认10行，相当于增加参数 -n 10），刷新显示在屏幕上。退出，按下CTRL+C。
+
+2、tail -n 20 filename
+说明：显示filename最后20行。
+
+3、tail -r -n 10 filename
+说明：逆序显示filename最后10行。
+
+补充：
+跟tail功能相似的命令还有：
+cat 从第一行開始显示档案内容。
+tac 从最后一行開始显示档案内容。
+more 分页显示档案内容。
+less 与 more 相似，但支持向前翻页
+head 仅仅显示前面几行
+tail 仅仅显示后面几行
+n 带行号显示档案内容
+od 以二进制方式显示档案内容
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+
+
+dirname
+
+dirname命令去除文件名中的非目录部分，仅显示与目录有关的内容。dirname命令读取指定路径名保留最后一个/及其后面的字符，删除其他部分，并写结果到标准输出。
+如果最后一个/后无字符，dirname 命令使用倒数第二个/，并忽略其后的所有字符。dirname 和 basename 通常在 shell 内部命令替换使用，以指定一个与指定输入文件名略有差异的输出文件名。
+
+语法
+dirname(选项)(参数)
+选项
+--help：显示帮助；
+--version：显示版本号。
+实例
+dirname //
+结果为 /
+
+dirname /a/b/
+结果为：/a
+
+dirname a
+结果为 .
+
+dirname a/b
+结果为路径名 a
+
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+
+linux中shell变量$#,$@,$0,$1,$2的含义解释
+摘抄自：ABS_GUIDE
+
+下载地址：http://www.tldp.org/LDP/abs/abs-guide.pdf
+
+linux中shell变量$#,$@,$0,$1,$2的含义解释: 
+变量说明: 
+$$ 
+Shell本身的PID（ProcessID） 
+$! 
+Shell最后运行的后台Process的PID 
+$? 
+最后运行的命令的结束代码（返回值） 
+$- 
+使用Set命令设定的Flag一览 
+$* 
+所有参数列表。如"$*"用「"」括起来的情况、以"$1 $2 … $n"的形式输出所有参数。 
+$@ 
+所有参数列表。如"$@"用「"」括起来的情况、以"$1" "$2" … "$n" 的形式输出所有参数。 
+$# 
+添加到Shell的参数个数 
+$0 
+Shell本身的文件名 
+$1～$n 
+添加到Shell的各参数值。$1是第1参数、$2是第2参数…。 
+示例：
+
+1 #!/bin/bash
+ 2 #
+ 3 printf "The complete list is %s\n" "$$"
+ 4 printf "The complete list is %s\n" "$!"
+ 5 printf "The complete list is %s\n" "$?"
+ 6 printf "The complete list is %s\n" "$*"
+ 7 printf "The complete list is %s\n" "$@"
+ 8 printf "The complete list is %s\n" "$#"
+ 9 printf "The complete list is %s\n" "$0"
+10 printf "The complete list is %s\n" "$1"
+11 printf "The complete list is %s\n" "$2
+结果：
+
+[Aric@localhost ~]$ bash params.sh 123456 QQ
+The complete list is 24249
+The complete list is
+The complete list is 0
+The complete list is 123456 QQ
+The complete list is 123456
+The complete list is QQ
+The complete list is 2
+The complete list is params.sh
+The complete list is 123456
+The complete list is QQ
+
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+Linux下 $(cd `dirname $0`;pwd)
+
+Linux下获取当前的目录，需执行以下命令：
+
+$(cd `dirname $0`;pwd)
+
+其中，
+
+dirname $0，取得当前执行的脚本文件的父目录
+
+cd `dirname $0`，进入这个目录(切换当前工作目录)
+
+pwd，显示当前工作目录(cd执行后的)
+
+在使用的过程中需注意此事项： 
+命令中“`”不是英文的单引号，而是英文输入法下的“~”同一个按键下面的那个符号。
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+
+
+linux ${}表达式详解
+
+
+1、参数替换
+
+    1、${var_name}等价于$var_name（通常用这种简写方式）
+    2、$(var:-default) 和$(var-default)
+          $(var:-default)   当var为空或未定义时整个表达式的值为default
+          $(var-default)    当且仅当var未定义时整个表达式的值为default
+    3、$(var:=default) 和$(var=default)
+          $(var:=default)   当var为空或未定义时整个表达式的值为default，并且将var的值设置为default
+          $(var=default)    当且仅当var未定义时整个表达式的值为default，并且将var的值设置为default
+    4、$(var:?default) 和$(var?message)
+          $(var:?message)   当var为空或未定义时，打印错误信息，信息内容为message表示的值
+          $(var?message)    当且仅当var未定义时，打印错误信息，信息内容为message表示的值
+    5、$(var:+default) 和$(var+default)
+          $(var:+default)   当var已定义且不为空时整个表达式的值为default
+
+          $(var+default)   当var已定义时真个表达式的值为default(不管var是否是空)
+
+2、字符串截取
+
+    1、${str:offest} 从下标offset(含)开始截取到末尾的子串
+
+    2、${str:offest:length} 从下表offset(含)开始向后截取长度为length的子串，长度超出不报错
+
+    3、${str:offest:index} 此处的index为负数，最后一个字符为-1，依次往前为-2,-3。此表达式截取offset(含)到index(不含)
+
+         之间的子串，当index表示的位置在offset左边时会报错
+
+3、变量匹配
+
+    1、${!prefix*}、${!prefix@} 将带有前缀为prefix的变量名打印出来
+
+4、数组操作
+
+    1、${!name[@]}、${!name[*]} 将数组name的所有下标返回，如果变量name不是数组则返回0,不存在则空
+
+    2、${name[@]}、${name[*]}将数组name的所有元素返回，如果变量name不是数组则返回name的值,不存在则空
+
+    3、${name[index]} 将数组name的index处的元素返回，如果变量name不是数组且index为0时返回name的值,变量或索
+
+          index处的元素不存在则返回空
+
+5、正则匹配替换
+
+    1、${parameter#word}、${parameter##word}
+
+      从头开始扫描word，将匹配word正则表达的字符过滤掉
+      #为最短匹配，##为最长匹配
+
+    2、${parameter%word}、${parameter%%word}
+
+      从尾开始扫描word，将匹配word正则表达式的字符过滤掉
+      %为最短匹配，%%为最长匹配
+
+    3、${parameter/pattern/string}、${parameter//pattern/string}
+
+      /表示只替换一次
+      //表示全部替换
+
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+Shell脚本中让进程休眠的方法（sleep用法）
+
+
+这篇文章主要介绍了Shell脚本中让进程休眠的方法,本文讲解的就是sleep的用法,可以实现睡觉若干秒、若干分钟、若干小时,需要的朋友可以参考下
+
+有时候写Shell的脚本，用于顺序执行一系列的程序。 有些程序在停止之后并没能立即退出，就例如有一个 tomcat 挂了，就算是用 kill -9 命令也还没瞬间就结束掉。
+
+这么如果 shell 还没等其退出就接着执行下一行，这么就出乱子了。 刚知道了原来 shell 也能有 sleep 的参数。
+
+复制代码 代码如下:
+
+sleep 1 睡眠1秒
+sleep 1s 睡眠1秒
+sleep 1m 睡眠1分
+sleep 1h 睡眠1小时
+
+用法如下，例如重启tomcat：
+
+代码如下
+
+#!/bin/sh
+/opt/tomcat/bin/shutdown.sh
+sleep 3  #等3秒后执行下一条
+/opt/tomcat/bin/startup.sh
+
+====================================================================================================================================
+====================================================================================================================================
+
+
+shell提取文件后缀名，并判断其是否为特定字符串
+
+
+如果文件是 .css文件 或 .js文件，则进行处理。
+
+file=$1
+
+if [ "${file##*.}"x = "css"x ]||[ "${file##*.}"x = "js"x ];then
+
+    do something
+
+fi
+
+注意：
+
+1> 提取文件后缀名： ${file##*.}
+
+    ##是贪婪操作符，从左至右匹配，匹配到最右边的.号，移除包含.号的左边内容。
+
+	
+====================================================================================================================================
+
+
+exec命令用于调用并执行指令的命令。exec命令通常用在shell脚本程序中，可以调用其他的命令。
+如果在当前终端中使用命令，则当指定的命令执行完毕后会立即退出终端。
+
+====================================================================================================================================
+
+linux中seq命令用法
+ 
+ 
+用于产生从某个数到另外一个数之间的所有整数
+例一：
+# seq 1 10
+结果是1 2 3 4 5 6 7 8 9 10
+例二：
+#!/bin/bash
+for i in `seq 1 10`;
+do
+echo $i;
+done
+或者用
+for i in $(seq 1 10)
+也可以
+seq
+-f, --format=FORMAT      use printf style floating-point FORMAT (default: %g)
+-s, --separator=STRING   use STRING to separate numbers (default: \n)
+-w, --equal-width        equalize width by padding with leading zeroes
+-f 选项   指定格式
+#seq -f"%3g" 9 11
+9
+10
+11
+% 后面指定数字的位数 默认是"%g", 
+"%3g"那么数字位数不足部分是空格
+#sed -f"%03g" 9 11  这样的话数字位数不足部分是0
+% 前面制定字符串
+seq -f "str%03g" 9 11
+str009
+str010
+str011
+-w 指定输出数字同宽   不能和-f一起用
+seq -w -f"str%03g" 9 11
+seq: format string may not be specified when printing equal width strings
+seq -w 98 101
+098
+099
+100
+101
+输出是同宽的
+-s 指定分隔符  默认是回车
+seq -s" " -f"str%03g" 9 11
+str009 str010 str011
+要指定\t 做为分隔符号
+seq -s"`echo -e "\t"`" 9 11
+指定\n\n作为分隔符号
+seq -s"`echo -e "\n\n"`" 9 11
+19293949596979899910911
+得到的是个错误结果
+不过一般也没有这个必要  它默认的就是回车作为分隔符
+ 
+几个例子
+ 
+awk 'BEGIN { while (num < 10 ) printf "dir%03d\n", ++num ; exit}' | xargs mkdir
+mkdir $(seq -f 'dir%03g' 1 10)
+ 
+for i in `seq -f '%02g' 1 20`
+do
+if ! wget -P $HOME/tmp -c [img]http://www.xxxsite.com/photo/$i.jpg[/img] ; then
+wget -P $HOME/tmp -c $_
+fi
+done
+ 
+ 
+seq 是Linux 中一個預設的外部命令,一般用作一堆數字的簡化寫法，如
+seq 1 10
+便會出現
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+它還有三個選項
+-f, --format=FORMAT      use printf style floating-point FORMAT (default: %g)
+-s, --separator=STRING   use STRING to separate numbers (default: \n)
+-w, --equal-width        equalize width by padding with leading zeroes
+-f 最常用, 例如一次制做10 個名dir001 , dir002 .. dir010 的目錄，它便很有用途,我們可以
+這樣下一個命令便可了
+seq -f 'dir%03g' 1 10 | xargs mkdir
+或
+mkdir $(seq -f 'dir%03g' 1 10)
+它用的是printf 的格式, %03g' 代表以三位浮點數,以此方法，如用bash3 的printf
+也可作為等價命令
+printf 'dir%03d\n' {1..10} | xargs mkdir  或mkdir `printf 'dir%03d ' {1..10}`
+awk 當然也可以
+awk 'BEGIN { while (num < 10 ) printf "dir%03d\n", ++num ; exit}' | xargs mkdir
+這樣會比寫一個腳本快, 不必寫成
+for dir in 001 002 003 004 005 006 007 008 009 010
+do
+mkdir dir${dir}
+done
+我也常用seq 下載用數字的jpeg , 只要格式有數字順序便可,尤以一些xxx site
+for i in `seq -f '%02g' 1 20`
+do
+if ! wget -P $HOME/tmp -c [img]http://www.xxxsite.com/photo/$i.jpg[/img] ; then
+wget -P $HOME/tmp -c $_
+fi
+done
+ 
+-s 選項主要改變輸出的分格符, 預設是\n , 就是newline
+如用-s 便可改變, 如
+seq -s ' ' 1 10
+1 2 3 4 5 6 7 8 9 10  , 以空格作為分格, 但在Gnu 的seq , 好像
+不支援\n ,\t ...等字符？ 如用\n\n, 以兩個空格, 便得寫成
+[victor@localhost ~]$ seq -s '
+> 
+> ' 1 5
+1
+ 
+2
+ 
+3
+ 
+4
+ 
+5
+\t 便得改變IFS, 如用\t\t
+OIFS=$IFS
+IFS="\t\t"
+seq -s `echo -e $IFS` 1 5
+IFS=$OIFS
+其它的字符也是這樣吧？
+ 
+ 
+seq命令的作用就是打印出一串有序的数字,它主要有以下3个参数构成:
+ 
+       -f, --format=FORMAT
+use printf style floating-point FORMAT (default: %g)
+-f 指定打印的格式:
+例如:
+[root@hao32]# seq -f %05g 2 7
+00002
+00003
+00004
+00005
+00006
+00007
+ 
+       -s, --separator=STRING
+use STRING to separate numbers (default: \n)
+-s 指定分隔符 默认是回车:
+例如:
+[root@hao32]# seq -s" " 2 7
+2 3 4 5 6 7
+ 
+       -w, --equal-width
+equalize width by padding with leading zeroes
+-w 输出是同宽 前面不足的用"0" 补全，即与位数最多的数对齐
+例如:
+[root@hao32]# seq -w 2 11
+02
+03
+04
+05
+06
+07
+08
+09
+10
+11
+
+====================================================================================================================================
+
+seq命令Shell内建命令
+
+
+seq命令用于产生从某个数到另外一个数之间的所有整数。
+
+语法
+seq [选项]... 尾数
+seq [选项]... 首数 尾数
+seq [选项]... 首数 增量 尾数
+选项
+-f, --format=格式        使用printf 样式的浮点格式
+-s, --separator=字符串   使用指定字符串分隔数字（默认使用：\n）
+-w, --equal-width        在列前添加0 使得宽度相同
+实例
+-f选项：指定格式
+
+#seq -f"%3g" 9 11
+9
+10
+11
+%后面指定数字的位数 默认是%g，%3g那么数字位数不足部分是空格。
+
+#sed -f"%03g" 9 11
+#seq -f"str%03g" 9 11
+str009
+str010
+str011
+这样的话数字位数不足部分是0，%前面制定字符串。
+
+-w选项：指定输出数字同宽
+
+seq -w 98 101
+098
+099
+100
+101
+不能和-f一起用，输出是同宽的。
+
+-s选项：指定分隔符（默认是回车）
+
+seq -s" " -f"str%03g" 9 11
+str009 str010 str011
+要指定/t做为分隔符号：
+
+seq -s"`echo -e "/t"`" 9 11
+指定\n作为分隔符号：
+
+seq -s"`echo -e "\n"`" 9 11
+19293949596979899910911
+得到的是个错误结果，不过一般也没有这个必要，它默认的就是回车作为分隔符。
+
+
+
+
+
+====================================================================================================================================
+
+
+sed命令文件编辑
+
+ 
+sed是一种流编辑器，它是文本处理中非常中的工具，能够完美的配合正则表达式使用，功能不同凡响。处理时，把当前处理的行存储在临时缓冲区中，称为“模式空间”（pattern space），
+接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。文件内容并没有 改变，除非你使用重定向存储输出。
+Sed主要用来自动编辑一个或多个文件；简化对文件的反复操作；编写转换程序等。
+
+sed的选项、命令、替换标记
+命令格式
+
+sed [options] 'command' file(s)
+sed [options] -f scriptfile file(s)
+选项
+-e<script>或--expression=<script>：以选项中的指定的script来处理输入的文本文件；
+-f<script文件>或--file=<script文件>：以选项中指定的script文件来处理输入的文本文件；
+-h或--help：显示帮助；
+-n或--quiet或——silent：仅显示script处理后的结果；
+-V或--version：显示版本信息。
+参数
+文件：指定待处理的文本文件列表。
+
+sed命令
+a\ 在当前行下面插入文本。
+i\ 在当前行上面插入文本。
+c\ 把选定的行改为新的文本。
+d 删除，删除选择的行。
+D 删除模板块的第一行。
+s 替换指定字符
+h 拷贝模板块的内容到内存中的缓冲区。
+H 追加模板块的内容到内存中的缓冲区。
+g 获得内存缓冲区的内容，并替代当前模板块中的文本。
+G 获得内存缓冲区的内容，并追加到当前模板块文本的后面。
+l 列表不能打印字符的清单。
+n 读取下一个输入行，用下一个命令处理新的行而不是用第一个命令。
+N 追加下一个输入行到模板块后面并在二者间嵌入一个新行，改变当前行号码。
+p 打印模板块的行。
+P(大写) 打印模板块的第一行。
+q 退出Sed。
+b lable 分支到脚本中带有标记的地方，如果分支不存在则分支到脚本的末尾。
+r file 从file中读行。
+t label if分支，从最后一行开始，条件一旦满足或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。
+T label 错误分支，从最后一行开始，一旦发生错误或者T，t命令，将导致分支到带有标号的命令处，或者到脚本的末尾。
+w file 写并追加模板块到file末尾。  
+W file 写并追加模板块的第一行到file末尾。  
+! 表示后面的命令对所有没有被选定的行发生作用。  
+= 打印当前行号码。  
+# 把注释扩展到下一个换行符以前。  
+sed替换标记
+g 表示行内全面替换。  
+p 表示打印行。  
+w 表示把行写入一个文件。  
+x 表示互换模板块中的文本和缓冲区中的文本。  
+y 表示把一个字符翻译为另外的字符（但是不用于正则表达式）
+\1 子串匹配标记
+& 已匹配字符串标记
+sed元字符集
+^ 匹配行开始，如：/^sed/匹配所有以sed开头的行。
+$ 匹配行结束，如：/sed$/匹配所有以sed结尾的行。
+. 匹配一个非换行符的任意字符，如：/s.d/匹配s后接一个任意字符，最后是d。
+* 匹配0个或多个字符，如：/*sed/匹配所有模板是一个或多个空格后紧跟sed的行。
+[] 匹配一个指定范围内的字符，如/[ss]ed/匹配sed和Sed。  
+[^] 匹配一个不在指定范围内的字符，如：/[^A-RT-Z]ed/匹配不包含A-R和T-Z的一个字母开头，紧跟ed的行。
+\(..\) 匹配子串，保存匹配的字符，如s/\(love\)able/\1rs，loveable被替换成lovers。
+& 保存搜索字符用来替换其他字符，如s/love/**&**/，love这成**love**。
+\< 匹配单词的开始，如:/\<love/匹配包含以love开头的单词的行。
+\> 匹配单词的结束，如/love\>/匹配包含以love结尾的单词的行。
+x\{m\} 重复字符x，m次，如：/0\{5\}/匹配包含5个0的行。
+x\{m,\} 重复字符x，至少m次，如：/0\{5,\}/匹配至少有5个0的行。
+x\{m,n\} 重复字符x，至少m次，不多于n次，如：/0\{5,10\}/匹配5~10个0的行。
+sed用法实例
+替换操作：s命令
+替换文本中的字符串：
+
+sed 's/book/books/' file
+-n选项和p命令一起使用表示只打印那些发生替换的行：
+
+sed -n 's/test/TEST/p' file
+
+直接编辑文件选项-i，会匹配file文件中每一行的第一个book替换为books：
+
+sed -i 's/book/books/g' file
+全面替换标记g
+使用后缀 /g 标记会替换每一行中的所有匹配：
+
+sed 's/book/books/g' file
+当需要从第N处匹配开始替换时，可以使用 /Ng：
+
+echo sksksksksksk | sed 's/sk/SK/2g'
+skSKSKSKSKSK
+
+echo sksksksksksk | sed 's/sk/SK/3g'
+skskSKSKSKSK
+
+echo sksksksksksk | sed 's/sk/SK/4g'
+skskskSKSKSK
+定界符
+以上命令中字符 / 在sed中作为定界符使用，也可以使用任意的定界符：
+
+sed 's:test:TEXT:g'
+sed 's|test|TEXT|g'
+定界符出现在样式内部时，需要进行转义：
+
+sed 's/\/bin/\/usr\/local\/bin/g'
+删除操作：d命令
+删除空白行：
+
+sed '/^$/d' file
+删除文件的第2行：
+
+sed '2d' file
+删除文件的第2行到末尾所有行：
+
+sed '2,$d' file
+删除文件最后一行：
+
+sed '$d' file
+删除文件中所有开头是test的行：
+
+sed '/^test/'d file
+已匹配字符串标记&
+正则表达式 \w\+ 匹配每一个单词，使用 [&] 替换它，& 对应于之前所匹配到的单词：
+
+echo this is a test line | sed 's/\w\+/[&]/g'
+[this] [is] [a] [test] [line]
+所有以192.168.0.1开头的行都会被替换成它自已加localhost：
+
+sed 's/^192.168.0.1/&localhost/' file
+192.168.0.1localhost
+子串匹配标记\1
+匹配给定样式的其中一部分：
+
+echo this is digit 7 in a number | sed 's/digit \([0-9]\)/\1/'
+this is 7 in a number
+命令中 digit 7，被替换成了 7。样式匹配到的子串是 7，\(..\) 用于匹配子串，对于匹配到的第一个子串就标记为 \1，依此类推匹配到的第二个结果就是 \2，例如：
+
+echo aaa BBB | sed 's/\([a-z]\+\) \([A-Z]\+\)/\2 \1/'
+BBB aaa
+love被标记为1，所有loveable会被替换成lovers，并打印出来：
+
+sed -n 's/\(love\)able/\1rs/p' file
+组合多个表达式
+sed '表达式' | sed '表达式'
+
+等价于：
+
+sed '表达式; 表达式'
+引用
+sed表达式可以使用单引号来引用，但是如果表达式内部包含变量字符串，就需要使用双引号。
+
+test=hello
+echo hello WORLD | sed "s/$test/HELLO"
+HELLO WORLD
+选定行的范围：,（逗号）
+所有在模板test和check所确定的范围内的行都被打印：
+
+sed -n '/test/,/check/p' file
+打印从第5行开始到第一个包含以test开始的行之间的所有行：
+
+sed -n '5,/^test/p' file
+对于模板test和west之间的行，每行的末尾用字符串aaa bbb替换：
+
+sed '/test/,/west/s/$/aaa bbb/' file
+多点编辑：e命令
+-e选项允许在同一行里执行多条命令：
+
+sed -e '1,5d' -e 's/test/check/' file
+上面sed表达式的第一条命令删除1至5行，第二条命令用check替换test。命令的执行顺序对结果有影响。如果两个命令都是替换命令，那么第一个替换命令将影响第二个替换命令的结果。
+
+和 -e 等价的命令是 --expression：
+
+sed --expression='s/test/check/' --expression='/love/d' file
+从文件读入：r命令
+file里的内容被读进来，显示在与test匹配的行后面，如果匹配多行，则file的内容将显示在所有匹配行的下面：
+
+sed '/test/r file' filename
+写入文件：w命令  
+在example中所有包含test的行都被写入file里：
+
+sed -n '/test/w file' example
+追加（行下）：a\命令
+将 this is a test line 追加到 以test 开头的行后面：
+
+sed '/^test/a\this is a test line' file
+在 test.conf 文件第2行之后插入 this is a test line：
+
+sed -i '2a\this is a test line' test.conf
+插入（行上）：i\命令
+将 this is a test line 追加到以test开头的行前面：
+
+sed '/^test/i\this is a test line' file
+在test.conf文件第5行之前插入this is a test line：
+
+sed -i '5i\this is a test line' test.conf
+下一个：n命令
+如果test被匹配，则移动到匹配行的下一行，替换这一行的aa，变为bb，并打印该行，然后继续：
+
+sed '/test/{ n; s/aa/bb/; }' file
+变形：y命令
+把1~10行内所有abcde转变为大写，注意，正则表达式元字符不能使用这个命令：
+
+sed '1,10y/abcde/ABCDE/' file
+退出：q命令
+打印完第10行后，退出sed
+
+sed '10q' file
+保持和获取：h命令和G命令
+在sed处理文件的时候，每一行都被保存在一个叫模式空间的临时缓冲区中，除非行被删除或者输出被取消，否则所有被处理的行都将 打印在屏幕上。接着模式空间被清空，并存入新的一行等待处理。
+
+sed -e '/test/h' -e '$G' file
+在这个例子里，匹配test的行被找到后，将存入模式空间，h命令将其复制并存入一个称为保持缓存区的特殊缓冲区内。第二条语句的意思是，当到达最后一行后，G命令取出保持缓冲区的行，然后把它放回模式空间中，且追加到现在已经存在于模式空间中的行的末尾。在这个例子中就是追加到最后一行。简单来说，任何包含test的行都被复制并追加到该文件的末尾。
+
+保持和互换：h命令和x命令
+互换模式空间和保持缓冲区的内容。也就是把包含test与check的行互换：
+
+sed -e '/test/h' -e '/check/x' file
+脚本scriptfile
+sed脚本是一个sed的命令清单，启动Sed时以-f选项引导脚本文件名。Sed对于脚本中输入的命令非常挑剔，在命令的末尾不能有任何空白或文本，如果在一行中有多个命令，要用分号分隔。以#开头的行为注释行，且不能跨行。
+
+sed [options] -f scriptfile file(s)
+打印奇数行或偶数行
+方法1：
+
+sed -n 'p;n' test.txt  #奇数行
+sed -n 'n;p' test.txt  #偶数行
+方法2：
+
+sed -n '1~2p' test.txt  #奇数行
+sed -n '2~2p' test.txt  #偶数行
+打印匹配字符串的下一行
+grep -A 1 SCC URFILE
+sed -n '/SCC/{n;p}' URFILE
+awk '/SCC/{getline; print}' URFILE
+
+
+============================================================================================================
+
+
+linux-awk中NF与$NF的区别
+ 
+NF 表示的是浏览记录的域的个数 
+$NF 表示的最后一个Field（列），即输出最后一个字段的内容
+
+[root@localhost SHELL]# free -m | grep buffers\/
+-/+ buffers/cache:       1815       1859
+[root@localhost SHELL]# free -m | grep buffers\/ | awk '{print $NF}'
+1859
+[root@localhost SHELL]# free -m | grep buffers\/ | awk '{print NF}'
+4
+[root@localhost SHELL]# 
+
+
+============================================================================================================
+
+
+
+sort命令是在Linux里非常有用，它将文件进行排序，并将排序结果标准输出。sort命令既可以从特定的文件，也可以从stdin中获取输入。
+语法
+
+sort(选项)(参数)
+
+选项
+
+-b：忽略每行前面开始出的空格字符；
+-c：检查文件是否已经按照顺序排序；
+-d：排序时，处理英文字母、数字及空格字符外，忽略其他的字符；
+-f：排序时，将小写字母视为大写字母；
+-i：排序时，除了040至176之间的ASCII字符外，忽略其他的字符；
+-m：将几个排序号的文件进行合并；
+-M：将前面3个字母依照月份的缩写进行排序；
+-n：依照数值的大小排序；
+-o<输出文件>：将排序后的结果存入制定的文件；
+-r：以相反的顺序来排序；
+-t<分隔字符>：指定排序时所用的栏位分隔字符；
++<起始栏位>-<结束栏位>：以指定的栏位来排序，范围由起始栏位到结束栏位的前一栏位。
+
+参数
+
+文件：指定待排序的文件列表。
+实例
+
+sort将文件/文本的每一行作为一个单位，相互比较，比较原则是从首字符向后，依次按ASCII码值进行比较，最后将他们按升序输出。
+
+[root@mail text]# cat sort.txt
+aaa:10:1.1
+ccc:30:3.3
+ddd:40:4.4
+bbb:20:2.2
+eee:50:5.5
+eee:50:5.5
+
+[root@mail text]# sort sort.txt
+aaa:10:1.1
+bbb:20:2.2
+ccc:30:3.3
+ddd:40:4.4
+eee:50:5.5
+eee:50:5.5
+
+忽略相同行使用-u选项或者uniq：
+
+[root@mail text]# cat sort.txt
+aaa:10:1.1
+ccc:30:3.3
+ddd:40:4.4
+bbb:20:2.2
+eee:50:5.5
+eee:50:5.5
+
+[root@mail text]# sort -u sort.txt
+aaa:10:1.1
+bbb:20:2.2
+ccc:30:3.3
+ddd:40:4.4
+eee:50:5.5
+
+或者
+
+[root@mail text]# uniq sort.txt
+aaa:10:1.1
+ccc:30:3.3
+ddd:40:4.4
+bbb:20:2.2
+eee:50:5.5
+
+sort的-n、-r、-k、-t选项的使用：
+
+[root@mail text]# cat sort.txt
+AAA:BB:CC
+aaa:30:1.6
+ccc:50:3.3
+ddd:20:4.2
+bbb:10:2.5
+eee:40:5.4
+eee:60:5.1
+
+#将BB列按照数字从小到大顺序排列：
+[root@mail text]# sort -nk 2 -t: sort.txt
+AAA:BB:CC
+bbb:10:2.5
+ddd:20:4.2
+aaa:30:1.6
+eee:40:5.4
+ccc:50:3.3
+eee:60:5.1
+
+#将CC列数字从大到小顺序排列：
+[root@mail text]# sort -nrk 3 -t: sort.txt
+eee:40:5.4
+eee:60:5.1
+ddd:20:4.2
+ccc:50:3.3
+bbb:10:2.5
+aaa:30:1.6
+AAA:BB:CC
+
+# -n是按照数字大小排序，-r是以相反顺序，-k是指定需要排序的栏位，-t指定栏位分隔符为冒号
+
+-k选项的具体语法格式：
+
+-k选项的语法格式：
+
+FStart.CStart Modifie,FEnd.CEnd Modifier
+-------Start--------,-------End--------
+ FStart.CStart 选项  ,  FEnd.CEnd 选项
+
+这个语法格式可以被其中的逗号,分为两大部分，Start部分和End部分。Start部分也由三部分组成，其中的Modifier部分就是我们之前说过的类似n和r的选项部分。我们重点说说Start部分的FStart和C.Start。C.Start也是可以省略的，省略的话就表示从本域的开头部分开始。FStart.CStart，其中FStart就是表示使用的域，而CStart则表示在FStart域中从第几个字符开始算“排序首字符”。同理，在End部分中，你可以设定FEnd.CEnd，如果你省略.CEnd，则表示结尾到“域尾”，即本域的最后一个字符。或者，如果你将CEnd设定为0(零)，也是表示结尾到“域尾”。
+
+从公司英文名称的第二个字母开始进行排序：
+
+$ sort -t ' ' -k 1.2 facebook.txt
+baidu 100 5000
+sohu 100 4500
+google 110 5000
+guge 50 3000
+
+使用了-k 1.2，表示对第一个域的第二个字符开始到本域的最后一个字符为止的字符串进行排序。你会发现baidu因为第二个字母是a而名列榜首。sohu和 google第二个字符都是o，但sohu的h在google的o前面，所以两者分别排在第二和第三。guge只能屈居第四了。
+
+只针对公司英文名称的第二个字母进行排序，如果相同的按照员工工资进行降序排序：
+
+$ sort -t ' ' -k 1.2,1.2 -nrk 3,3 facebook.txt
+baidu 100 5000
+google 110 5000
+sohu 100 4500
+guge 50 3000
+
+由于只对第二个字母进行排序，所以我们使用了-k 1.2,1.2的表示方式，表示我们“只”对第二个字母进行排序。（如果你问“我使用-k 1.2怎么不行？”，当然不行，因为你省略了End部分，这就意味着你将对从第二个字母起到本域最后一个字符为止的字符串进行排序）。对于员工工资进行排 序，我们也使用了-k 3,3，这是最准确的表述，表示我们“只”对本域进行排序，因为如果你省略了后面的3，就变成了我们“对第3个域开始到最后一个域位置的内容进行排序” 了。
+
+
+
+
+============================================================================================================
+
+问：
+文件中有这样的数据：
+
+111 1 aaa 1 1 100 101
+222 2 bbb 2 2 200 202
+
+要计算出第七列减去第六列的值的总和，得到3,如何做到？
+
+
+答：
+1个回答
+已采纳
+
+用awk来实现：
+
+awk '{x+=($7-$6)}END{print x}' file
+
+
+============================================================================================================
+
+
+read命令
+
+Shell内建命令
+
+read命令从键盘读取变量的值，通常用在shell脚本中与用户进行交互的场合。该命令可以一次读取多个变量的值，变量和输入的值都需要使用空格隔开。在read命令后面，如果没有指定变量名，读取的数据将被自动赋值给特定的变量REPLY
+语法
+
+read(选项)(参数)
+
+选项
+
+-p：指定读取值时的提示符；
+-t：指定读取值时等待的时间（秒）。
+
+参数
+
+变量：指定读取值的变量名。
+实例
+
+下面的列表给出了read命令的常用方式：
+
+read 1987name
+从标准输入读取输入并赋值给变量1987name。
+
+read first last
+从标准输入读取输入到第一个空格或者回车，将输入的第一个单词放到变量first中，并将该行其他的输入放在变量last中。
+
+read
+从标准输入读取一行并赋值给特定变量REPLY。
+
+read -a arrayname
+把单词清单读入arrayname的数组里。
+
+read -p "text"
+打印提示（text），等待输入，并将输入存储在REPLY中。
+
+read -r line
+允许输入包含反斜杠。
+
+read -t 3
+指定读取等待时间为3秒。
+
+read -n 2 var
+从输入中读取两个字符并存入变量var，不需要按回车读取。
+
+read -d ":" var
+用定界符“:”结束输入行。
+
+read命令示例
+
+从标准输入读取输入并赋值给变量1987name。
+
+#read 1987name        #等待读取输入，直到回车后表示输入完毕，并将输入赋值给变量answer
+HelloWorld            #控制台输入Hello
+
+#echo $1987name       #打印变量
+HelloWorld
+
+等待一组输入，每个单词之间使用空格隔开，直到回车结束，并分别将单词依次赋值给这三个读入变量。
+
+#read one two three
+1 2 3                   #在控制台输入1 2 3，它们之间用空格隔开。
+
+#echo "one = $one, two = $two, three = $three"
+one = 1, two = 2, three = 3
+
+REPLY示例
+
+#read                  #等待控制台输入，并将结果赋值给特定内置变量REPLY。
+This is REPLY          #在控制台输入该行。
+
+
+#echo $REPLY           #打印输出特定内置变量REPLY，以确认是否被正确赋值。
+
+This is REPLY
+
+-p选项示例
+
+#read -p "Enter your name: "            #输出文本提示，同时等待输入，并将结果赋值给REPLY。
+Enter you name: stephen                 #在提示文本之后输入stephen
+
+#echo $REPLY
+stephen
+
+等待控制台输入，并将输入信息视为数组，赋值给数组变量friends，输入信息用空格隔开数组的每个元素。
+
+#read -a friends
+Tim Tom Helen
+
+#echo "They are ${friends[0]}, ${friends[1]} and ${friends[2]}."
+They are Tim, Tom and Helen.
+
+补充一个终端输入密码时候，不让密码显示出来的例子。
+
+方法1：
+
+#!/bin/bash
+read -p "输入密码：" -s pwd
+echo
+echo password read, is "$pwd"
+
+方法2：
+
+#!/bin/bash
+stty -echo
+read -p "输入密码：" pwd
+stty echo
+echo
+echo 输入完毕。
+
+其中，选项-echo禁止将输出发送到终端，而选项echo则允许发送输出。
+
+使用read命令从键盘读取变量值，并且将值赋给指定的变量，输入如下命令：
+
+read v1 v3          #读取变量值
+
+执行上面的指令以后，要求键入两个数据，如下所示：
+
+Linux c+            #输入数据
+
+完成之后，可以使用echo命令将指定的变量值输出查看，输入如下命令：
+
+echo $v1 $v3       #输出变量的值
+
+执行输出变量值的命令以后，将显示用户所输入的数据值，如下所示：
+
+Linux c+           #输出变量值
+
+注意：使用echo命令输出变量值时，必须在变量名前添加符号$。否则，echo将直接输出变量名。
+
+
+
+
+============================================================================================================
+============================================================================================================
+
+
+
+Linux中变量#,
+@,0,
+1,2,
+*,$$,$?的含义
+
+	
+$# 是传给脚本的参数个数
+$0 是脚本本身的名字
+$1 是传递给该shell脚本的第一个参数
+$2 是传递给该shell脚本的第二个参数
+$@ 是传给脚本的所有参数的列表
+$* 是以一个单字符串显示所有向脚本传递的参数，与位置变量不同，参数可超过9个
+$$ 是脚本运行的当前进程ID号
+$? 是显示最后命令的退出状态，0表示没有错误，其他表示有错误
+
+区别：@
+
+*
+
+    相同点：都是引用所有参数
+    不同点：只有在双引号中体现出来。假设在脚本运行时写了三个参数（分别存储在1
+
+2 3）则"*" 等价于 “12 3"（传递了一个参数）；而“@" 等价于 "1""
+
+    2" "$3"（传递了三个参数）
+
+例子一
+复制代码
+
+##dels.sh
+echo "number:$#"
+echo "scname:$0"
+echo "first :$1"
+echo "second:$2"
+echo "argume:$@"
+echo "show parm list:$*"
+echo "show process id:$$"
+echo "show precomm stat: $?"
+
+复制代码
+
+执行结果
+
+[@jihite]$ sh del.sh 1 2 3
+number:3
+scname:del.sh
+first: 1
+second:2
+argume:1 2 3
+show parm list:1 2 3
+show process id:21057
+show precomm stat: 0
+
+例子二
+复制代码
+
+#!/bin/sh
+num=$#
+name=$0
+echo "number:$num"
+echo "scname:$name"
+echo $0
+echo $1
+echo $2
+
+for ((i=0; i<$num; i++))
+do
+    echo "$i"
+done
+
+echo "argume:$@"
+for key in $@
+do
+    echo $key
+done
+echo "-----------------"
+for key in "$@"
+do
+    echo $key
+done
+echo "-----------------------------"
+for key2 in $*
+do 
+    echo $key2
+done
+echo "-----------------"
+for key2 in "$*"
+do 
+    echo $key2
+done
+
+echo "show process id:$$"
+cho
+echo "show precomm stat: $?"
+
+复制代码
+
+执行结果
+	
+[@jihite]$ sh del.sh a b                                                      
+number:2
+scname:del.sh
+del.sh
+a
+b
+0
+1
+argume:a b
+a
+b
+-----------------
+a
+b
+-----------------------------
+a
+b
+-----------------
+a b
+show process id:23582
+del.sh: line 37: cho: command not found
+show precomm stat: 127
+
+问题：
+
+echo #0 #1 能不能用 $i 表示呢？
+
+
+============================================================================================================
+============================================================================================================
+问题：
+linux shell 中这两个$* $@有啥区别呀。。
+用的时候，感觉这两个可以互相替换。。。
+
+
+最佳答案：
+
+相同点：都是引用所有参数
+不同点：只有在双引号中体现出来
+假设你的脚本运行时你写了三个参数 分别存储在$1 $2 $3中 
+则"$*" 等价于 “$1 $2 $3"  ---》传递了一个参数
+
+============================================================================================================
+
+
+
+linux shell 判断变量是否为空。-n -z 有什么不同呢？
+
+-n STRING
+		  the length of STRING is nonzero
+
+   STRING equivalent to -n STRING
+
+   -z STRING
+		  the length of STRING is zero
+
+
+		  
+		  
+
+
+============================================================================================================
+		  
+		  
+linux shell 路径截取正则表达式
+
+
+这篇文章主要介绍了linux shell 路径截取正则表达式的相关资料,需要的朋友可以参考下
+
+最近写脚本，需要对脚本中函数传递的路径参数进行截取，发现了以下比较好用的方法，记录下：
+
+file=/dir1/dir2/dir3/my.file.txt
+
+我们可以用${ }分别替换获得不同的值：
+
+${file#*/}：拿掉第一条/及其左边的字串：dir1/dir2/dir3/my.file.txt
+
+${file##*/}：拿掉最后一条/及其左边的字串：my.file.txt
+
+${file#*.}：拿掉第一个.及其左边的字串：file.txt
+
+${file##*.}：拿掉最后一个.及其左边的字串：txt
+
+${file%/*}：拿掉最后条/及其右边的字串：/dir1/dir2/dir3
+
+${file%%/*}：拿掉第一条/及其右边的字串：（空值）
+
+${file%.*}：拿掉最后一个.及其右边的字串：/dir1/dir2/dir3/my.file
+
+${file%%.*}：拿掉第一个.及其右边的字串：/dir1/dir2/dir3/my
+
+感谢阅读，希望能帮助到大家，谢谢大家对本站的支持！
+
+
+============================================================================================================
+
+
+二、Shell函数参数
+
+在Shell中，调用函数时可以向其传递参数。在函数体内部，通过 $n 的形式来获取参数的值，例如，$1表示第一个参数，$2表示第二个参数...
+
+带参数的函数示例：
+
+复制代码 代码如下:
+
+#!/bin/bash
+funWithParam(){
+    echo "The value of the first parameter is $1 !"
+    echo "The value of the second parameter is $2 !"
+    echo "The value of the tenth parameter is $10 !"
+    echo "The value of the tenth parameter is ${10} !"
+    echo "The value of the eleventh parameter is ${11} !"
+    echo "The amount of the parameters is $# !"
+    echo "The string of the parameters is $* !"
+}
+funWithParam 1 2 3 4 5 6 7 8 9 34 73		  
+
+
+
+============================================================================================================
+
+看下端口是否被其他程序占用     lsof -i:8091
+
+使用：netstat -apn | grep 8091 则可以查看端口的使用情况， 然后用kill 命令将其他的进程杀死。
+
+
+
+附，去iptables 防火墙开端口：
+
+iptables -I INPUT -p 协议 --dport 端口号 -j ACCEPT
+
+/sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+
+iptables -L -n查看当前iptables(防火墙)规则
+
+
+
+
+============================================================================================================
+
+
+shell的逻辑运算符 涉及有以下几种类型，因此只要适当选择，可以解决我们很多复杂的判断，达到事半功倍效果。
+
+ 
+
+一、逻辑运算符
+ 
+
+ 
+逻辑卷标 	表示意思
+1. 	关于档案与目录的侦测逻辑卷标！
+-f 	常用！侦测『档案』是否存在 eg: if [ -f filename ]
+-d 	常用！侦测『目录』是否存在
+-b 	侦测是否为一个『 block 档案』
+-c 	侦测是否为一个『 character 档案』
+-S 	侦测是否为一个『 socket 标签档案』
+-L 	侦测是否为一个『 symbolic link 的档案』
+-e 	侦测『某个东西』是否存在！
+2. 	关于程序的逻辑卷标！
+-G 	侦测是否由 GID 所执行的程序所拥有
+-O 	侦测是否由 UID 所执行的程序所拥有
+-p 	侦测是否为程序间传送信息的 name pipe 或是 FIFO （老实说，这个不太懂！）
+3. 	关于档案的属性侦测！
+-r 	侦测是否为可读的属性
+-w 	侦测是否为可以写入的属性
+-x 	侦测是否为可执行的属性
+-s 	侦测是否为『非空白档案』
+-u 	侦测是否具有『 SUID 』的属性
+-g 	侦测是否具有『 SGID 』的属性
+-k 	侦测是否具有『 sticky bit 』的属性
+4. 	两个档案之间的判断与比较 ；例如[ test file1 -nt file2 ]
+-nt 	第一个档案比第二个档案新
+-ot 	第一个档案比第二个档案旧
+-ef 	第一个档案与第二个档案为同一个档案（ link 之类的档案）
+5. 	逻辑的『和(and)』『或(or)』
+&& 	逻辑的 AND 的意思
+|| 	逻辑的 OR 的意思
+
+  
+
+ 
+运算符号 	代表意义
+= 	等于 应用于：整型或字符串比较 如果在[] 中，只能是字符串
+!= 	不等于 应用于：整型或字符串比较 如果在[] 中，只能是字符串
+< 	小于 应用于：整型比较 在[] 中，不能使用 表示字符串
+> 	大于 应用于：整型比较 在[] 中，不能使用 表示字符串
+-eq 	等于 应用于：整型比较
+-ne 	不等于 应用于：整型比较
+-lt 	小于 应用于：整型比较
+-gt 	大于 应用于：整型比较
+-le 	小于或等于 应用于：整型比较
+-ge 	大于或等于 应用于：整型比较
+-a 	双方都成立（and） 逻辑表达式 –a 逻辑表达式
+-o 	单方成立（or） 逻辑表达式 –o 逻辑表达式
+-z 	空字符串
+-n 	非空字符串
+
+ 
+
+二、逻辑表达式
+
+ 
+
+    test 命令 
+
+    使用方法：test EXPRESSION
+
+    如：
+
+    [root@localhost ~]# test 1 = 1 && echo 'ok'
+    ok
+
+    [root@localhost ~]# test -d /etc/ && echo 'ok'
+    ok
+
+    [root@localhost ~]# test 1 -eq 1 && echo 'ok'
+    ok
+
+     
+
+    [root@localhost ~]# if test 1 = 1 ; then echo 'ok'; fi
+    ok
+
+ 
+
+    注意：所有字符 与逻辑运算符直接用“空格”分开，不能连到一起。
+
+ 
+
+    精简表达式 
+
+        [] 表达式 
+
+    [root@localhost ~]# [ 1 -eq 1 ] && echo 'ok'          
+    ok
+
+    [root@localhost ~]# [ 2 < 1 ] && echo 'ok'                 
+    -bash: 2: No such file or directory
+
+    [root@localhost ~]# [ 2 \< 1 ] && echo 'ok'
+
+    [root@localhost ~]# [ 2 -gt 1 -a 3 -lt 4 ] && echo 'ok'
+
+    ok    
+
+    [root@localhost ~]# [ 2 -gt 1 && 3 -lt 4 ] && echo 'ok'  
+    -bash: [: missing `]'
+
+    注意：在[] 表达式中，常见的>,<需要加转义字符，表示字符串大小比较，以acill码 位置作为比较。 不直接支持<>运算符，还有逻辑运算符|| && 它需要用-a[and] –o[or]表示
+     
+
+     
+
+        [[]] 表达式 
+
+    [root@localhost ~]# [ 1 -eq 1 ] && echo 'ok'          
+    ok
+
+    [root@localhost ~]$ [[ 2 < 3 ]] && echo 'ok'
+    ok
+    [root@localhost ~]$ [[ 2 < 3 && 4 > 5 ]] && echo 'ok'
+    ok
+
+    注意：[[]] 运算符只是[]运算符的扩充。能够支持<,>符号运算不需要转义符，它还是以字符串比较大小。里面支持逻辑运算符：|| &&
+
+     
+
+ 
+
+三、性能比较
+
+bash的条件表达式中有三个几乎等效的符号和命令：test，[]和[[]]。通常，大家习惯用if [];then这样的形式。而[[]]的出现，根据ABS所说，是为了兼容><之类的运算符。以下是比较它们性能，发现[[]]是最快的。
+
+
+$ time (for m in {1..100000}; do test -d .;done;)
+real    0m0.658s
+user    0m0.558s
+sys     0m0.100s
+
+
+$ time (for m in {1..100000}; do [ -d . ];done;)
+real    0m0.609s
+user    0m0.524s
+sys     0m0.085s
+
+
+$ time (for m in {1..100000}; do [[ -d . ]];done;)
+real    0m0.311s
+user    0m0.275s
+sys     0m0.036s
+
+
+============================================================================================================
+
+
+
+删除文件夹实例：
+rm -rf /var/log/httpd/access
+将会删除/var/log/httpd/access目录以及其下所有文件、文件夹
+2
+删除文件使用实例：
+rm -f /var/log/httpd/access.log
+将会强制删除/var/log/httpd/access.log这个文件
+
+
+============================================================================================================
+
+awk参数详解
+2016年11月08日 08:12:08
+阅读数：1946
+转载自：http://www.cnblogs.com/nb-blog/p/5780424.html
+
+wk是行处理器: 相比较屏幕处理的优点，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息
+awk处理过程: 依次对每一行进行处理，然后输出
+awk命令形式:
+awk [-F|-f|-v] ‘BEGIN{} //{command1; command2} END{}’ file
+ [-F|-f|-v]   大参数，-F指定分隔符，-f调用脚本，-v定义变量 var=value
+'  '          引用代码块
+BEGIN   初始化代码块，在对每一行进行处理之前，初始化代码，主要是引用全局变量，设置FS分隔符
+//           匹配代码块，可以是字符串或正则表达式
+{}           命令代码块，包含一条或多条命令
+；          多条命令使用分号分隔
+END      结尾代码块，在对每一行进行处理之后再执行的代码块，主要是进行最终计算或输出结尾摘要信息
+ 
+特殊要点:
+$0           表示整个当前行
+$1           每行第一个字段
+NF          字段数量变量
+NR          每行的记录号，多文件记录递增
+FNR        与NR类似，不过多文件记录不递增，每个文件都从1开始
+\t            制表符
+\n           换行符
+FS          BEGIN时定义分隔符
+RS       输入的记录分隔符， 默认为换行符(即文本是按一行一行输入)
+~            匹配，与==相比不是精确比较
+!~           不匹配，不精确比较
+==         等于，必须全部相等，精确比较
+!=           不等于，精确比较
+&&　     逻辑与
+||             逻辑或
++            匹配时表示1个或1个以上
+/[0-9][0-9]+/   两个或两个以上数字
+/[0-9][0-9]*/    一个或一个以上数字
+FILENAME 文件名
+OFS      输出字段分隔符， 默认也是空格，可以改为制表符等
+ORS        输出的记录分隔符，默认为换行符,即处理结果也是一行一行输出到屏幕
+-F'[:#/]'   定义三个分隔符
+ 
+print & $0
+print 是awk打印指定内容的主要命令
+awk '{print}'  /etc/passwd   ==   awk '{print $0}'  /etc/passwd  
+awk '{print " "}' /etc/passwd                                           //不输出passwd的内容，而是输出相同个数的空行，进一步解释了awk是一行一行处理文本
+awk '{print "a"}'   /etc/passwd                                        //输出相同个数的a行，一行只有一个a字母
+awk -F":" '{print $1}'  /etc/passwd 
+awk -F: '{print $1; print $2}'   /etc/passwd                   //将每一行的前二个字段，分行输出，进一步理解一行一行处理文本
+awk  -F: '{print $1,$3,$6}' OFS="\t" /etc/passwd        //输出字段1,3,6，以制表符作为分隔符
+ 
+-f指定脚本文件
+awk -f script.awk  file
+BEGIN{
+FS=":"
+}
+{print $1}               //效果与awk -F":" '{print $1}'相同,只是分隔符使用FS在代码自身中指定
+ 
+awk 'BEGIN{X=0} /^$/{ X+=1 } END{print "I find",X,"blank lines."}' test 
+I find 4 blank lines.
+ ls -l|awk 'BEGIN{sum=0} !/^d/{sum+=$5} END{print "total size is",sum}'                    //计算文件大小
+total size is 17487
+ 
+-F指定分隔符
+$1 指指定分隔符后，第一个字段，$3第三个字段， \t是制表符
+一个或多个连续的空格或制表符看做一个定界符，即多个空格看做一个空格
+awk -F":" '{print $1}'  /etc/passwd
+awk -F":" '{print $1 $3}'  /etc/passwd                       //$1与$3相连输出，不分隔
+awk -F":" '{print $1,$3}'  /etc/passwd                       //多了一个逗号，$1与$3使用空格分隔
+awk -F":" '{print $1 " " $3}'  /etc/passwd                  //$1与$3之间手动添加空格分隔
+awk -F":" '{print "Username:" $1 "\t\t Uid:" $3 }' /etc/passwd       //自定义输出  
+awk -F: '{print NF}' /etc/passwd                                //显示每行有多少字段
+awk -F: '{print $NF}' /etc/passwd                              //将每行第NF个字段的值打印出来
+ awk -F: 'NF==4 {print }' /etc/passwd                       //显示只有4个字段的行
+awk -F: 'NF>2{print $0}' /etc/passwd                       //显示每行字段数量大于2的行
+awk '{print NR,$0}' /etc/passwd                                 //输出每行的行号
+awk -F: '{print NR,NF,$NF,"\t",$0}' /etc/passwd      //依次打印行号，字段数，最后字段值，制表符，每行内容
+awk -F: 'NR==5{print}'  /etc/passwd                         //显示第5行
+awk -F: 'NR==5 || NR==6{print}'  /etc/passwd       //显示第5行和第6行
+route -n|awk 'NR!=1{print}'                                       //不显示第一行
+ 
+//匹配代码块
+//纯字符匹配   !//纯字符不匹配   ~//字段值匹配    !~//字段值不匹配   ~/a1|a2/字段值匹配a1或a2   
+awk '/mysql/' /etc/passwd
+awk '/mysql/{print }' /etc/passwd
+awk '/mysql/{print $0}' /etc/passwd                   //三条指令结果一样
+awk '!/mysql/{print $0}' /etc/passwd                  //输出不匹配mysql的行
+awk '/mysql|mail/{print}' /etc/passwd
+awk '!/mysql|mail/{print}' /etc/passwd
+awk -F: '/mail/,/mysql/{print}' /etc/passwd         //区间匹配
+awk '/[2][7][7]*/{print $0}' /etc/passwd               //匹配包含27为数字开头的行，如27，277，2777...
+awk -F: '$1~/mail/{print $1}' /etc/passwd           //$1匹配指定内容才显示
+awk -F: '{if($1~/mail/) print $1}' /etc/passwd     //与上面相同
+awk -F: '$1!~/mail/{print $1}' /etc/passwd          //不匹配
+awk -F: '$1!~/mail|mysql/{print $1}' /etc/passwd        
+ 
+IF语句
+必须用在{}中，且比较内容用()扩起来
+awk -F: '{if($1~/mail/) print $1}' /etc/passwd                                       //简写
+awk -F: '{if($1~/mail/) {print $1}}'  /etc/passwd                                   //全写
+awk -F: '{if($1~/mail/) {print $1} else {print $2}}' /etc/passwd            //if...else...
+ 
+ 
+条件表达式
+==   !=   >   >=  
+awk -F":" '$1=="mysql"{print $3}' /etc/passwd  
+awk -F":" '{if($1=="mysql") print $3}' /etc/passwd          //与上面相同 
+awk -F":" '$1!="mysql"{print $3}' /etc/passwd                 //不等于
+awk -F":" '$3>1000{print $3}' /etc/passwd                      //大于
+awk -F":" '$3>=100{print $3}' /etc/passwd                     //大于等于
+awk -F":" '$3<1{print $3}' /etc/passwd                            //小于
+awk -F":" '$3<=1{print $3}' /etc/passwd                         //小于等于
+ 
+逻辑运算符
+&&　|| 
+awk -F: '$1~/mail/ && $3>8 {print }' /etc/passwd         //逻辑与，$1匹配mail，并且$3>8
+awk -F: '{if($1~/mail/ && $3>8) print }' /etc/passwd
+awk -F: '$1~/mail/ || $3>1000 {print }' /etc/passwd       //逻辑或
+awk -F: '{if($1~/mail/ || $3>1000) print }' /etc/passwd 
+ 
+数值运算
+awk -F: '$3 > 100' /etc/passwd    
+awk -F: '$3 > 100 || $3 < 5' /etc/passwd  
+awk -F: '$3+$4 > 200' /etc/passwd
+awk -F: '/mysql|mail/{print $3+10}' /etc/passwd                    //第三个字段加10打印 
+awk -F: '/mysql/{print $3-$4}' /etc/passwd                             //减法
+awk -F: '/mysql/{print $3*$4}' /etc/passwd                             //求乘积
+awk '/MemFree/{print $2/1024}' /proc/meminfo                  //除法
+awk '/MemFree/{print int($2/1024)}' /proc/meminfo           //取整
+ 
+输出分隔符OFS
+awk '$6 ~ /FIN/ || NR==1 {print NR,$4,$5,$6}' OFS="\t" netstat.txt
+awk '$6 ~ /WAIT/ || NR==1 {print NR,$4,$5,$6}' OFS="\t" netstat.txt        
+//输出字段6匹配WAIT的行，其中输出每行行号，字段4，5,6，并使用制表符分割字段
+ 
+输出处理结果到文件
+①在命令代码块中直接输出    route -n|awk 'NR!=1{print > "./fs"}'   
+②使用重定向进行输出           route -n|awk 'NR!=1{print}'  > ./fs
+ 
+格式化输出
+netstat -anp|awk '{printf "%-8s %-8s %-10s\n",$1,$2,$3}' 
+printf表示格式输出
+%格式化输出分隔符
+-8长度为8个字符
+s表示字符串类型
+打印每行前三个字段，指定第一个字段输出字符串类型(长度为8)，第二个字段输出字符串类型(长度为8),
+第三个字段输出字符串类型(长度为10)
+netstat -anp|awk '$6=="LISTEN" || NR==1 {printf "%-10s %-10s %-10s \n",$1,$2,$3}'
+netstat -anp|awk '$6=="LISTEN" || NR==1 {printf "%-3s %-10s %-10s %-10s \n",NR,$1,$2,$3}'
+ 
+IF语句
+awk -F: '{if($3>100) print "large"; else print "small"}' /etc/passwd
+small
+small
+small
+large
+small
+small
+awk -F: 'BEGIN{A=0;B=0} {if($3>100) {A++; print "large"} else {B++; print "small"}} END{print A,"\t",B}' /etc/passwd 
+                                                                                                                  //ID大于100,A加1，否则B加1
+awk -F: '{if($3<100) next; else print}' /etc/passwd                         //小于100跳过，否则显示
+awk -F: 'BEGIN{i=1} {if(i<NF) print NR,NF,i++ }' /etc/passwd   
+awk -F: 'BEGIN{i=1} {if(i<NF) {print NR,NF} i++ }' /etc/passwd
+另一种形式
+awk -F: '{print ($3>100 ? "yes":"no")}'  /etc/passwd 
+awk -F: '{print ($3>100 ? $3":\tyes":$3":\tno")}'  /etc/passwd
+ 
+while语句
+awk -F: 'BEGIN{i=1} {while(i<NF) print NF,$i,i++}' /etc/passwd 
+7 root 1
+7 x 2
+7 0 3
+7 0 4
+7 root 5
+7 /root 6
+ 
+数组
+netstat -anp|awk 'NR!=1{a[$6]++} END{for (i in a) print i,"\t",a[i]}'
+netstat -anp|awk 'NR!=1{a[$6]++} END{for (i in a) printf "%-20s %-10s %-5s \n", i,"\t",a[i]}'
+9523                               1     
+9929                               1     
+LISTEN                            6     
+7903                               1     
+3038/cupsd                   1     
+7913                               1     
+10837                             1     
+9833                               1     
+ 
+应用1
+awk -F: '{print NF}' helloworld.sh                                                       //输出文件每行有多少字段
+awk -F: '{print $1,$2,$3,$4,$5}' helloworld.sh                                 //输出前5个字段
+awk -F: '{print $1,$2,$3,$4,$5}' OFS='\t' helloworld.sh                 //输出前5个字段并使用制表符分隔输出
+awk -F: '{print NR,$1,$2,$3,$4,$5}' OFS='\t' helloworld.sh           //制表符分隔输出前5个字段，并打印行号
+ 
+应用2
+awk -F'[:#]' '{print NF}'  helloworld.sh                                                  //指定多个分隔符: #，输出每行多少字段
+awk -F'[:#]' '{print $1,$2,$3,$4,$5,$6,$7}' OFS='\t' helloworld.sh   //制表符分隔输出多字段
+ 
+应用3
+awk -F'[:#/]' '{print NF}' helloworld.sh                                               //指定三个分隔符，并输出每行字段数
+awk -F'[:#/]' '{print $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12}' helloworld.sh     //制表符分隔输出多字段
+ 
+应用4
+计算/home目录下，普通文件的大小，使用KB作为单位
+ls -l|awk 'BEGIN{sum=0} !/^d/{sum+=$5} END{print "total size is:",sum/1024,"KB"}'
+ls -l|awk 'BEGIN{sum=0} !/^d/{sum+=$5} END{print "total size is:",int(sum/1024),"KB"}'         //int是取整的意思
+ 
+应用5
+统计netstat -anp 状态为LISTEN和CONNECT的连接数量分别是多少
+netstat -anp|awk '$6~/LISTEN|CONNECTED/{sum[$6]++} END{for (i in sum) printf "%-10s %-6s %-3s \n", i," ",sum[i]}'
+ 
+应用6
+统计/home目录下不同用户的普通文件的总数是多少？
+ls -l|awk 'NR!=1 && !/^d/{sum[$3]++} END{for (i in sum) printf "%-6s %-5s %-3s \n",i," ",sum[i]}'   
+mysql        199 
+root           374 
+统计/home目录下不同用户的普通文件的大小总size是多少？
+ls -l|awk 'NR!=1 && !/^d/{sum[$3]+=$5} END{for (i in sum) printf "%-6s %-5s %-3s %-2s \n",i," ",sum[i]/1024/1024,"MB"}'
+ 
+应用7
+输出成绩表
+awk 'BEGIN{math=0;eng=0;com=0;printf "Lineno.   Name    No.    Math   English   Computer    Total\n";printf "------------------------------------------------------------\n"}{math+=$3; eng+=$4; com+=$5;printf "%-8s %-7s %-7s %-7s %-9s %-10s %-7s \n",NR,$1,$2,$3,$4,$5,$3+$4+$5} END{printf "------------------------------------------------------------\n";printf "%-24s %-7s %-9s %-20s \n","Total:",math,eng,com;printf "%-24s %-7s %-9s %-20s \n","Avg:",math/NR,eng/NR,com/NR}' test0
+
+[root@localhost home]# cat test0 
+Marry   2143 78 84 77
+Jack    2321 66 78 45
+Tom     2122 48 77 71
+Mike    2537 87 97 95
+Bob     2415 40 57 62
+
+
+
+
+============================================================================================================
+
+free命令可以显示当前系统未使用的和已使用的内存数目，还可以显示被内核使用的内存缓冲区。
+
+语法
+free(选项)
+选项
+-b：以Byte为单位显示内存使用情况；
+-k：以KB为单位显示内存使用情况；
+-m：以MB为单位显示内存使用情况；
+-o：不显示缓冲区调节列；
+-s<间隔秒数>：持续观察内存使用状况；
+-t：显示内存总和列；
+-V：显示版本信息。
+实例
+free -m
+             total       used       free     shared    buffers     cached
+Mem:          2016       1973         42          0        163       1497
+-/+ buffers/cache:        312       1703
+Swap:         4094          0       4094
+第一部分Mem行解释：
+
+total：内存总数；
+used：已经使用的内存数；
+free：空闲的内存数；
+shared：当前已经废弃不用；
+buffers Buffer：缓存内存数；
+cached Page：缓存内存数。
+关系：total = used + free
+
+第二部分(-/+ buffers/cache)解释:
+
+(-buffers/cache) used内存数：第一部分Mem行中的 used – buffers – cached
+(+buffers/cache) free内存数: 第一部分Mem行中的 free + buffers + cached
+可见-buffers/cache反映的是被程序实实在在吃掉的内存，而+buffers/cache反映的是可以挪用的内存总数。
+
+第三部分是指交换分区。
+
+
+============================================================================================================
+
+Linux上的free命令简介
+
+
+每次使用free时都比较迷惑，对于上面的内容一直都不是很清楚，今天仔细查了以下，和大家一起分享以下: 
+先看一下free的运行结果：
+
+这里写图片描述
+
+free打印出的内存信息主要分为两种，一种是安装的内存，一种是用磁盘虚拟的内存，就是这里的Swap，相信装过Linux系统的同学肯定不陌生交换分区，这里Swap大小就是我们分区的时候分配的大小。 
+下面来分别解释以下每个列的意思：
+
+total:去掉为硬件和操作系统保留的内存后剩余的内存总量。许多人奇怪自己的电脑安装了一共8G的内存，但是显示总共只有七点几G的，现在应该没什么疑惑了把，不管Linux还是Windows都会有部分内存是保留给硬件和操作系统的！
+userd：当前已使用的内存总量。
+free：空闲的或可以使用的内存总量
+shared：共享内存大小，主要用于进程间通信
+buff(buffers):主要用于块设备数据缓冲，例如记录文件系统的metadata（目录、权限等等信息）。
+cache:主要用于文件内容缓冲
+available:可以使用的内存总量
+
+
+buffers与cached的区别:
+
+对于应用程序来说，buffers/cached 是等于可用的，因为buffer/cached是为了提高文件读取的性能，当应用程序需在用到内存的时候，buffer/cached会很快地被回收。
+所以从应用程序的角度来说 可用内存=系统free memory+buffers+cached.
+buffers是指用来给块设备做的缓冲大小，他只记录文件系统的metadata以及 tracking in-flight pages,cached是用来给文件做缓冲。
+那就是说：buffers是用来存储，目录里面有什么内容，权限等等,而cached直接用来记忆我们打开的文件的。
+关于为什么需要缓冲，这里简单解释以下：我们知道，在CPU，内存，外存的运行速度之间，存在这样的关系：
+CPU比内存快100倍，内存比磁盘快十万倍，且他们之间的差距还在增大！
+因此为了协调他们速度之间的不匹配，缓存就由此而生，在CPU内部的缓存，为了协调CPU和内存之间速度的不匹配，而内存的产生也是为了协调磁盘和CPU速度的不匹配。有个这样的一个形象的描述：把CPU的一个时钟周期看作一秒。那么，从L1 cache(CPU的一级缓存)读取信息就好像是拿起桌上的一张草稿纸（3秒）；从L2 cache(CPU的二级缓存)读取信息则是从身边的书架上取出一本书（14秒）；而从主存中读取信息则相当于走到办公楼下去买个零食（4分钟），而等待硬盘寻道的时间相当于离开办公大楼并开始长达一年零三个月的环球旅行，而这仅仅是寻道时间！
+
+
+free的详细使用方法
+
+语　　法： free [-hbkmotV][-s <间隔秒数>]
+
+补充说明：free指令会显示内存的使用情况，包括实体内存，虚拟的交换文件内存，共享内存区段，以及系统核心使用的缓冲区等。
+
+参　　数：
+-b 　以Byte为单位显示内存使用情况。
+-k 　以KB为单位显示内存使用情况。
+-m 　以MB为单位显示内存使用情况。
+-h   以比较人性化的方式显示内存使用情况。
+-o 　不显示缓冲区调节列。
+-s   <间隔秒数> 　持续观察内存使用状况。
+-t 　显示内存总和列。
+-V 　显示版本信息。   
+
+
+
+
+============================================================================================================
+
+
+            linux 操作系统 
+
+一.linux 操作系统概述
+
+    1.常见操作系统
+       - 服务端操作系统 ： linux、unix、windows server 
+       - 单机操作系统 ： windows（dos 、ucdos、win95、win98、win2000、xp、vista、win7、win8）
+                         MAC 、linux（ubuntu）
+       - 移动操作系统 Android、IOS 、Windows phone
+    2.linux操作系统介绍
+
+      - 为什么要学习linux操作系统 
+        1. 大部分服务端都采用linux ，JEE部署到服务器中
+        2. 一些企业和学校采用linux研发和教学 
+	3. 很多嵌入式开发 用linux  
+        4. 云计算、大数据 是集群网  linux : centos 
+      - 特点   
+        1. 开放、开源、多用户的网络操作系统
+	2. 基于unix（unix-->minix-->linux(linus :林纳斯 芬兰 )），可以定制内核
+	3. 假如了GNU组织（自由软件组织 ，copyLeft） ，通过GPL（通用公共许可） 许可对外发布  
+      - linux组成
+         1. linux内核（linus 团队管理）
+	 2. shell ：用户与内核交互的接口
+	 3. 文件系统 ： ext3、ext4 等  windows 有 fat32  、ntfs 
+	 4. 第三方应用软件 
+	
+      - linux操作系统版本   
+        1. 内核版本 (linus 团队管理)  3.8
+	2. 发行版本  :一些软件公司以内核为基础，再添加一些软件和文档形成发行版本
+	   - red hat  ： rhel ，centos
+	   - debian   ： debian，ubuntu（桌面）
+	   - android  
+二.安装linux系统
+
+   1. vmware安装 ： 创建虚拟机的软件 
+      vitual box ：oracle 公司提供
+
+   2. 虚拟机安装
+      - 直接安装
+        - 创建虚拟机
+	- 安装ubuntu镜像
+      - 打开虚拟机镜像： 虚拟机+操作系统（ubuntu）
+        1. 打开*.vmx 文件
+	2. 用户名  itcast  密码  123
+        
+三.linux系统环境  
+   默认有6个命令交互通道和一个图形界面交互通道，默认进入到的是图形界面通道
+     命令交互模式切换：ctrl+alt+f1---f6
+     图形交互界面 ctrl+alt+f7
+   
+   1.图形界面交互模式
+     - terminal： 图形界面的命令终端，它是图形界面交互通道的延伸，要依赖于图形界面
+                  
+    
+   2.命令交互模式 
+      命令提示符：
+      itcast@ubuntu:~$ 
+        - itcast：用户名
+	- ubuntu ：主机名
+	- ~  ：路径 ，假如当前的路径正好是 该用户存放数据的根目录 ，则显示~
+	- $ :用户的类型  $代表普通用户  #  代表 超级用户
+      
+   3.linux文件系统 
+
+    - 目录结构
+    - 文件权限分析
+      w ：可写   r： 只读  x：可执行  - ：无权限
+      文件权限
+       1. 字符表示法
+         drwxr-xr-x
+	  第一个字符 ：文件的类型  d ：普通文件  - ：文件夹  c ：串口文件  l ：连接文件
+           2-4 字符  ： 该文件的属主用户的权限 
+	   5-7  字符 ： 与属主用户同一组的其他用户的权限
+	   8-10 字符 ：  不同组的其他用户的权限
+        2. 数字表示法
+	   -rw-r--r--   ：文件的默认权限   644
+	   drwxr-xr-x   ： 目录的默认权限  755  
+     
+四、linux的常用命令 
+
+   1.注销、关机、重启
+     - 注销 ：logout ：登出 、exit 
+     - 关机 ：
+        shutdown - h  时间
+	  - h ：关机
+	  - 时间 ：
+	    1. now :马上
+	    2. 12.30 ：指定具体时间
+	    3. 3  ：几分钟以后
+	 sudo ： superuser do ：由超级用户来执行该命令
+	   要配置sudo 命令 ： 授权 哪些用户能执行哪些命令
+	    由超级用户配置  sudo 
+	     /etc/sudoers 
+	   sudo shutdown -h now    当前账号：itcast  
+     - 重启 ：
+        shutdown -r  时间
+	  -r ：restart 
+   2.linux基本命令 ：文件操作命令
+    
+     1. ls   ： 查看目录内容
+        - l ：查看详细信息
+	- a ：查看所有文件（隐藏）
+        man ：manual ： 手工，帮助 ，帮助命令，好比windows help 
+	 命令： man ls
+     2. mkdir ：创建目录 
+          Desktop：
+	    - java
+	      - JEE ： aa.txt  bb.txt  
+	      - Android
+     3. cd  切换目录
+        - cd ..  记得要加空格
+	- cd ./java  进入当前目录的子目录
+	- cd ../xxx  进入上一级目录的子目录
+	   tab ：自动补全
+     4. touch  ：创建一个空白的普通文件
+        touch aa.txt 
+     5. echo  :把内容重定向到指定的文件中 ，有则打开，无则创建
+     6. cat、more  ：查看文件内容
+        - cat ：查看文件内容
+	- more ：分页查看文件内容，按空格键换页
+	     
+     7. cp、mv、rm   
+        - cp ：复制
+	   cp bj.txt ./java/jee
+	- mv ：剪切、重命名
+	   1. 剪切 ：mv aa.txt ../android/
+	   2. 重命名 ：假如剪切的文件 存放在同一个目录中 ，则是重命名
+	       mv bb.txt cc.txt
+
+	- rm ：删除文件或者文件夹
+	  -f ： 假如要删除的文件不存在，也不提示
+	  -i ： 删除前提示 ，默认不删除，要删除，输入y
+	  -d ： 删除空白目录 
+	  -r ：递归删除
+     8. wc ：word count ：统计字符数
+         154  233 3418 
+	 - 154 ：行数
+	 - 233 ：单词数
+	 - 3418 ：字符数
+       命令： wc bj.txt
+        
+     9. ln :创建连接文件
+        - 默认创建的是硬连接，好比复制 ，但是两个文件会同步 
+	   命令：ln ./java/android/aa.txt  aaa
+	- s ：创建的是软连接
+        
+     10. pwd   ：查看当前目录的绝对路径 
+       
+     11. 管道命令 |
+       命令： ls -la | wc 
+     12. 重定向
+        - > :覆盖模式
+	命令：  echo "ww">aaa
+	- >>：追加模式
+	命令： echo "ww">>aaa
+     13. passwd   :设置密码  ，ubuntu默认 root账号是没有开启 ，只要设置root密码即可开启
+         sudo passwd root
+
+     14. su  切换目录
+         su root 
+	 root用户切换到其他账号不需要密码
+
+   3.linux 系统命令
+     1.stat   ：查看文件的详细信息
+       stat bj.txt
+     2.who与whoami
+       who : 查看在线的用户
+       whoami ：查看当前自己的用户
+     3.hostname ： 显示主机名
+       hostname
+     4.uname  ：显示系统信息
+        -a ：显示完整的系统信息
+        
+     5.top ：显示当前耗时的进行的信息 ，每3秒刷新一次 
+         cltr+c 中断 
+     6.ps ：显示当前进程的快照 
+       - axu
+     7.du ：显示文件的大小信息 
+     8.df ：磁盘使用情况  disk free
+     9.ifconfig ：查看或者配置网卡信息 ，好比windows 的ipconfig
+        ipv4：32位  2-32次方     ipv6  128位     是 ipv4  2-96次方倍数
+	设置虚拟机ip地址：
+	  1. 设置vmware的连接方式
+	     - 共享宿主机的ip地址，在网上邻居找不到
+	     - 桥接方式，需要单独设置ip，可以在网上邻居查找
+	  2. 图形界面设置ip地址 
+	      edit connection --》ipv4--》manual（手工设置）--》add  （ip地址，子网掩码）
+          3.命令方式设置ip地址
+	     静态设置ip：
+	     sudo ifconfig eth0 192.168.15.122 netmask 255.255.255.0 
+	    
+     10.ping  测试与目标主机连接情况
+        
+
+     11.clear  ： 清除屏幕  windows： cls  
+     12.man  ：帮助命令
+         man 命令
+     13.kill  ：杀死进程
+        kill  pid 
+     14.netstat  ：网络连接详细信息
+       
+     15. useradd 
+        - 查看用户信息
+	   sudo cat /etc/passwd
+	 itcast:x:1000:1000:UbuntuA,,,:/home/itcast:/bin/bash
+	  - itcast:用户名
+	  - x ：密码 ：已经加密 ，密码存放在  /etc/shadow 
+	  - 1000: 账号id ，userId
+	  - 1000： 组id ，group id
+          - UbuntuA,,,  ：账号描述
+          - /home/itcast ：该账号存放文件的默认位置  ~
+	  - /bin/bash：该用户的shell脚本的解析方式  ，sh 、bash、rbash
+ 
+        - 创建用户 
+	  sudo useradd lijun -d  /home/lijun   -s /bin/bash 
+	   -d :指定该用户的home 路径 
+	   - s ：该用户的shell解析方式
+	  步骤：
+	    1. 创建 /home/lijun 目录
+	    2. 执行 useradd 命令
+	    3. 用 passwd 设置密码
+	    4. su 切换用户
+
+
+       
+ 五、打包、压缩文件   
+    windows ： zip、rar    
+    linux ：gz ，bzip，zip
+
+     1.tar :打包、拆包命令 
+        tar - cxzjvf  <打包后的文件>   <欲打包的目录>
+	  - c ：创建的一个归档文件 ，即打包文件夹
+	  - x ：拆包
+	  - z ：以gzip 格式压缩，默认压缩倍数 6倍  （0-9）
+	  - j ：以bzip2格式压缩
+	  - v ：显示打包或者拆包的文件信息
+	  - f ： 后面紧接一个 归档文件,就是要打包的文件
+
+       - 打包文件
+          tar -cvf news.tar  ./java   摘要  
+       - 拆包文件
+          tar -xvf news.tar
+     2.gzip 、bzip2 压缩与解压
+        1. 压缩文件
+	  gzip news.tar
+	2. 解压文件
+	  gzip -d news.tar.gz
+	    -d :解压
+     3.打包及压缩 
+       - 打包及压缩
+          tar -czvf news.tar.gz ./java
+       - 拆包及压解缩
+          tar -xzvf  news.tar.gz
+
+ 六、软件管理 
+    windows ： .exe     安装 、卸载 
+       安装：  mysql.exe  cc.exe   
+       卸载 ： 该软件唯一的标识  ，包名   alibaba
+    android : *.apk   卸载 包名
+    red hat ：*.rpm 
+    ubuntu  : 对debian的升级  *.deb 格式
+
+
+     1.安装软件
+       - dpkg ：debian  package 
+          离线安装：
+	  安装 ： sudo dpkg - i  <文件名> 
+	    -i ：install
+	   命令：sudo dpkg -i ./tree_1.6.0-1_i386.deb
+	  卸载 ： sudo dpkg - r  <包名> 
+	    -r ：remove
+           命令：sudo dpkg -r tree
+       - apt-get  ：advance  package  tools 
+       　　对dpkg命令的升级，在线安装
+	  安装 ： sudo apt-get -install  <包名>
+	  卸载 ： sudo apt-get -remove  <包名>
+     2.vim 软件  ：好比记事本 ，但是比记事本要强大  
+        
+	 1. 安装vim
+	 2. 使用vim 
+	   操作模式：
+	     1. 一般模式 ，默认进入的一般模式，该模式不能编辑文档 ，只能查看
+	        按 i（insert）  进入 插入模式 
+	     2. 编辑模式、插入模式 
+	         该模式可以编辑文档，按esc 退出插入模式，进入到一般模式 
+	     3. 命令模式 ：在 一般模式中按：进入命令模式
+	        - q： 安全退出，当没有操作该文档，则直接按q退出vim 
+		- q! ：当修改了内容，但是不想保存，则q！强制退出
+		- wq ：保存退出
+		- set number 显示行号
+		- set nonumber 取消行号显示
+	       
+
+	 
+ 七、搭建Java服务器，并且实现远程安全访问linux系统
+    
+    1.通过ssh实现安全远程访问linux系统 
+       ssh ：secure shell
+         加密：
+	   1. 对称加密 （加密密钥与解密密钥相同）
+	      des 、aes
+	   2. 非对称加密（加密密钥与解密密钥不同）
+	      RSA ：公钥、私钥 
+	 数字摘要：
+	   md5 \sha1 
+	    
+      
+       1. 查看是否安装了ssh服务端与客户端
+         sudo apt-cache policy openssh-client openssh-server
+       2. 安装ssh 服务端与客户端软件
+          sudo dpkg -i ./ssh/*
+           
+       3. 通过windows ssh客户端来访问linux服务端
+          - putty ：远程登录
+	  - winscp433setup.exe ：文件传输
+
+    2. 安装jdk
+       进入 root用户
+       实现步骤：
+        1. jdk 存放在哪里  /opt
+	2. 把软件拷贝到/opt
+	3. 绿色软件，解压 
+	4.设置环境变量
+	   vim /etc/profile 
+	export JAVA_HOME="/opt/jdk1.6.0_39"
+        export PATH="$JAVA_HOME/bin:$PATH"
+	5. 刷新配置 ，让配置生效
+	   source /etc/profile
+	6. 编写Demo.java,测试 
+	   -javac Demo.java
+           - java Demo
+
+    3. 安装tomcat 
+       步骤：
+        1. 安装在哪里 /opt
+	2. 拷贝、解压
+	   tar -xzvf  apache-tomcat.tar.gz
+	3. 运行
+	   - ./startup.sh
+	   - ./shutdown.sh
+       
+      
+    4. 安装Eclipse
+       步骤：
+         1.安装在/opt
+	 2. 拷贝、解压
+	   cp eclipse.tar.gz  /opt
+	   tar -xzvf  eclipse.tar.gz
+	  
+重点：
+  1.linux系统环境
+     命令交互通道
+     命名提示符
+  2. linux 目录结构、文件权限
+    drwxr-xr-x
+  3. linux 命令
+    - 开关机
+    - 文件操作 
+    - 系统命令
+       1. top 2. who 3. ifconfig 4. ping 5. kill 6. man 7.clear 8.netstat
+  4. 软件管理
+     - dpkg ：离线  .deb  .rpm  .apk 
+     - apt-get ：在线 
+  5. 压缩解压
+     tar -cxgzvf 打包后的文件 要打包的文件
+  6. vim 的使用
+     三种模式
+  7. ssh理解 secure shell
+  8. java开发环境搭建
+
+----------------------------------------------------------------------------------------------------------------
+
+
+
+============================================================================================================
+
+
+  
+
+
+
+
+
+
+
+

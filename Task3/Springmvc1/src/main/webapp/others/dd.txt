@@ -1,0 +1,96 @@
+
+#user  nobody;
+
+#nginx进程数，建议设置为等于CPU总核心数
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+
+
+events {
+
+    #epoll模型是Linux 2.6以上版本内核中的高性能网络I/O模型，如果跑在FreeBSD上面，就用kqueue模型
+    use epoll;
+    #单个后台worker process进程的最大并发链接数
+    worker_connections  1024;
+}
+
+#设定http服务器，利用它的反向代理功能提供负载均衡支持
+http {
+
+upstream myLoadBalance {
+    #weigth参数表示权值，权值越高被分配到的几率越大
+    server 47.95.11.115:8081 weight=1;
+    server 47.95.11.115:8082  weight=1;
+    server 47.95.11.115:8083  weight=1;
+
+    }
+
+
+
+
+
+    #include  /root/data/Nginx_Home/conf/*.conf;
+    #文件扩展名与文件类型映射表
+	include       mime.types;
+     #默认文件类型
+	default_type  application/octet-stream;
+
+	#默认编码
+    charset utf-8;
+
+	#设定日志格式,其中upstream_response_time是响应时间,request_time是请求时间
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for" $request_time $upstream_response_time';
+
+	#成功日志
+    access_log  logs/access.log  main;
+
+    #指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，对于普通应用，
+    #必须设为 on,如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，以平衡磁盘与网络I/O处理速度，降低系统的uptime.
+    sendfile        on;
+
+	#防止网络阻塞
+    tcp_nopush     on;
+    tcp_nodelay    on;
+
+
+    #长连接超时时间，单位是秒
+	#keepalive_timeout  0;
+    keepalive_timeout  65;
+
+	#允许客户端请求的最大单文件字节数
+     client_max_body_size 50m;
+
+	#客户端放弃请求，nginx也放弃对后端的请求
+    #proxy_ignore_client_abort on;
+
+	#开启gzip压缩输出
+    #gzip  on;
+
+    server {
+        listen       80;
+        server_name  mynginx;
+
+        charset utf-8;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            proxy_pass        http://myLoadBalance;
+        }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
